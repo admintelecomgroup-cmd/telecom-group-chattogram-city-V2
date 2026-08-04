@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telecom Group Chattogram City</title>
+
+    <meta name="theme-color" content="#0d47a1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Telecom Group">
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+
+<h1>📱 টেলিকম গ্রুপ</h1>
+
+<h2>চট্টগ্রাম সিটি</h2>
+
+<p>সদস্য নিবন্ধন ফর্ম</p>
+</header>
+
+<!-- ========================= -->
+<!-- Install App Button -->
+<!-- ========================= -->
+
+<div class="install-box">
+    <button type="button" id="installBtn" hidden>
+        📲 Install App
+    </button>
+</div>
+
+<form id="memberForm" class="container" autocomplete="off">
+
+<!-- ========================= -->
+<!-- ব্যক্তিগত তথ্য -->
+<!-- ========================= -->
+
+<div class="card">
+<h3>👤 ব্যক্তিগত তথ্য</h3>
+
+<label>পূর্ণ নাম</label>
+<input
+type="text"
+id="name"
+placeholder="পূর্ণ নাম লিখুন"
+required>
+
+<label>মোবাইল নম্বর</label>
+<input
+type="tel"
+id="mobile"
+maxlength="11"
+inputmode="numeric"
+pattern="[0-9]{11}"
+placeholder="01XXXXXXXXX"
+required>
+
+<label>WhatsApp নম্বর</label>
+
+<input
+type="tel"
+id="whatsapp"
+maxlength="11"
+inputmode="numeric"
+pattern="[0-9]{11}"
+placeholder="01XXXXXXXXX">
+
+<label>ই-মেইল</label>
+<input
+type="email"
+id="email"
+placeholder="example@email.com">
+
+<label>জন্ম তারিখ</label>
+<input
+type="date"
+id="dob">
+
+</div>
+
+<!-- ========================= -->
+<!-- ব্যবসায়িক তথ্য -->
+<!-- ========================= -->
+
+<div class="card">
+
+<h3>🏪 ব্যবসায়িক তথ্য</h3>
+
+<label>দোকানের নাম</label>
+<input
+type="text"
+id="shop"
+placeholder="দোকানের নাম"
+required>
+
+<label>দোকানের ঠিকানা</label>
+<input
+type="text"
+id="address"
+placeholder="সম্পূর্ণ ঠিকানা">
+
+<label>Google Maps Link</label>
+<input
+type="url"
+id="map"
+placeholder="https://maps.google.com/...">
+
+<label>ব্যবসার ধরন</label>
+
+<select id="business" required>
+
+<option value="">-- ব্যবসার ধরন নির্বাচন করুন --</option>
+
+<optgroup label="📱 টেলিকম ও মোবাইল">
+
+<option>মোবাইল শপ</option>
+<option>মোবাইল সার্ভিসিং</option>
+<option>রিচার্জ পয়েন্ট</option>
+<option>সিম বিক্রয় কেন্দ্র</option>
+<option>বিকাশ এজেন্ট</option>
+<option>নগদ এজেন্ট</option>
+<option>রকেট এজেন্ট</option>
+<option>উপায় এজেন্ট</option>
+
+</optgroup>
+
+<optgroup label="🛒 খুচরা ব্যবসা">
+
+<option>মুদি দোকান</option>
+<option>স্টেশনারি দোকান</option>
+<option>কসমেটিক্স দোকান</option>
+<option>ফার্মেসি</option>
+<option>ইলেকট্রনিক্স দোকান</option>
+<option>কম্পিউটার দোকান</option>
+<option>হার্ডওয়্যার দোকান</option>
+<option>ফার্নিচার দোকান</option>
+<option>কাপড়ের দোকান</option>
+<option>জুতার দোকান</option>
+<option>ঘড়ির দোকান</option>
+<option>গিফট শপ</option>
+<option>লাইব্রেরি</option>
+<option>ফটোকপি ও প্রিন্টিং</option>
+
+</optgroup>
+
+<optgroup label="🍽️ খাদ্য ও রেস্টুরেন্ট">
+
+<option>চায়ের দোকান</option>
+<option>রেস্টুরেন্ট</option>
+<option>বেকারি</option>
+<option>মিষ্টির দোকান</option>
+<option>ফলের দোকান</option>
+<option>সবজির দোকান</option>
+
+</optgroup>
+
+<optgroup label="🔧 অন্যান্য">
+
+<option>অন্যান্য</option>
+
+</optgroup>
+
+</select>
+
+</div>
+
+<!-- ========================= -->
+<!-- ডকুমেন্ট -->
+<!-- ========================= -->
+
+<div class="card">
+
+<h3>📄 ডকুমেন্ট</h3>
+
+<label>সদস্যের ছবি</label>
+
+<input
+type="file"
+id="photo"
+accept="image/*"
+required>
+
+<label>দোকানের ছবি</label>
+
+<input
+type="file"
+id="shopImage"
+accept="image/*"
+required>
+
+<label>ট্রেড লাইসেন্স</label>
+
+<input
+type="file"
+id="tradeLicense"
+accept="image/*,application/pdf"
+required>
+
+<label>জাতীয় পরিচয়পত্র (NID) নম্বর</label>
+
+<input
+type="text"
+id="nid"
+maxlength="17"
+minlength="17"
+inputmode="numeric"
+pattern="[0-9]{17}"
+placeholder="১৭ সংখ্যার NID নম্বর"
+required>
+
+<label>NID এর ছবি (ঐচ্ছিক)</label>
+
+<input
+type="file"
+id="nidImage"
+accept="image/*">
+
+</div>
+
+<!-- ========================= -->
+<!-- ঘোষণাপত্র -->
+<!-- ========================= -->
+
+<div class="card">
+
+<h3>✅ ঘোষণাপত্র</h3>
+
+<label class="check">
+
+<input
+type="checkbox"
+id="agree"
+required>
+
+আমি নিশ্চিত করছি যে উপরের সকল তথ্য সঠিক।
+
+</label>
+
+<button
+type="submit"
+id="submitBtn">
+
+আবেদন জমা দিন
+
+</button>
+
+</div>
+
+</form>
+
+<!-- ========================= -->
+<!-- Admin Login -->
+<!-- ========================= -->
+
+<div class="top-menu">
+
+<a href="login.html">
+
+🔐 Admin Login
+
+</a>
+
+</div>
+
+<!-- ========================= -->
+<!-- JavaScript -->
+<!-- ========================= -->
+
+<script type="module" src="script.js"></script>
+
+<script>
+
+if ("serviceWorker" in navigator) {
+
+navigator.serviceWorker.register("./service-worker.js");
+
+}
+
+</script>
+<!-- ==========================================
+     Service Worker Registration
+========================================== -->
+
+<script>
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", async () => {
+
+        try {
+
+            const registration = await navigator.serviceWorker.register("./service-worker.js");
+
+            console.log("✅ Service Worker Registered:", registration.scope);
+
+        } catch (error) {
+
+            console.error("❌ Service Worker Registration Failed:", error);
+
+        }
+
+    });
+
+}
+</script>
+</body>
+</html>
