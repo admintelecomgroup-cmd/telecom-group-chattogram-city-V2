@@ -2,22 +2,28 @@
 <html lang="bn">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telecom Group Chattogram City</title>
 
-    <meta name="theme-color" content="#0d47a1">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Telecom Group">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icons/icon-192.png">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Telecom Group Chattogram City</title>
 
-    <link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#0d47a1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Telecom Group">
+
+<link rel="manifest" href="manifest.json">
+
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
 
 <header class="header">
@@ -27,28 +33,41 @@
 <h2>চট্টগ্রাম সিটি</h2>
 
 <p>সদস্য নিবন্ধন ফর্ম</p>
+
 </header>
 
-<!-- ========================= -->
 <!-- Install App Button -->
-<!-- ========================= -->
 
 <div class="install-box">
-    <button type="button" id="installBtn" hidden>
-        📲 Install App
-    </button>
+
+<button
+id="installBtn"
+type="button"
+hidden>
+
+📲 Install App
+
+</button>
+
 </div>
 
-<form id="memberForm" class="container" autocomplete="off">
+<!-- Registration Form -->
+
+<form
+id="memberForm"
+class="container"
+autocomplete="off">
 
 <!-- ========================= -->
 <!-- ব্যক্তিগত তথ্য -->
 <!-- ========================= -->
 
 <div class="card">
+
 <h3>👤 ব্যক্তিগত তথ্য</h3>
 
 <label>পূর্ণ নাম</label>
+
 <input
 type="text"
 id="name"
@@ -56,6 +75,7 @@ placeholder="পূর্ণ নাম লিখুন"
 required>
 
 <label>মোবাইল নম্বর</label>
+
 <input
 type="tel"
 id="mobile"
@@ -76,18 +96,19 @@ pattern="[0-9]{11}"
 placeholder="01XXXXXXXXX">
 
 <label>ই-মেইল</label>
+
 <input
 type="email"
 id="email"
 placeholder="example@email.com">
 
 <label>জন্ম তারিখ</label>
+
 <input
 type="date"
 id="dob">
 
-</div>
-
+</div>  
 <!-- ========================= -->
 <!-- ব্যবসায়িক তথ্য -->
 <!-- ========================= -->
@@ -97,6 +118,7 @@ id="dob">
 <h3>🏪 ব্যবসায়িক তথ্য</h3>
 
 <label>দোকানের নাম</label>
+
 <input
 type="text"
 id="shop"
@@ -104,12 +126,14 @@ placeholder="দোকানের নাম"
 required>
 
 <label>দোকানের ঠিকানা</label>
+
 <input
 type="text"
 id="address"
 placeholder="সম্পূর্ণ ঠিকানা">
 
 <label>Google Maps Link</label>
+
 <input
 type="url"
 id="map"
@@ -173,7 +197,6 @@ placeholder="https://maps.google.com/...">
 </select>
 
 </div>
-
 <!-- ========================= -->
 <!-- ডকুমেন্ট -->
 <!-- ========================= -->
@@ -271,27 +294,23 @@ id="submitBtn">
 </a>
 
 </div>
-
 <!-- ========================= -->
 <!-- JavaScript -->
 <!-- ========================= -->
 
 <script type="module" src="script.js"></script>
 
-<script>
-
-if ("serviceWorker" in navigator) {
-
-navigator.serviceWorker.register("./service-worker.js");
-
-}
-
-</script>
-<!-- ==========================================
-     Service Worker Registration
-========================================== -->
+<!-- ========================= -->
+<!-- PWA Install & Service Worker
+<!-- ========================= -->
 
 <script>
+
+let deferredPrompt;
+
+const installBtn = document.getElementById("installBtn");
+
+// Register Service Worker
 if ("serviceWorker" in navigator) {
 
     window.addEventListener("load", async () => {
@@ -311,6 +330,52 @@ if ("serviceWorker" in navigator) {
     });
 
 }
+
+// Install Prompt
+window.addEventListener("beforeinstallprompt", (event) => {
+
+    event.preventDefault();
+
+    deferredPrompt = event;
+
+    if (installBtn) {
+
+        installBtn.hidden = false;
+
+    }
+
+});
+
+installBtn?.addEventListener("click", async () => {
+
+    if (!deferredPrompt) return;
+
+    installBtn.hidden = true;
+
+    deferredPrompt.prompt();
+
+    const { outcome } = await deferredPrompt.userChoice;
+
+    console.log("Install Result:", outcome);
+
+    deferredPrompt = null;
+
+});
+
+window.addEventListener("appinstalled", () => {
+
+    console.log("✅ App Installed Successfully");
+
+    if (installBtn) {
+
+        installBtn.hidden = true;
+
+    }
+
+});
+
 </script>
+
 </body>
+
 </html>
