@@ -180,7 +180,7 @@ async function registerMember() {
   } catch (error) {
 
     console.error(error);
-    showAlert(error.message);
+    alert(JSON.stringify(error,null,2));
 
   } finally {
 
