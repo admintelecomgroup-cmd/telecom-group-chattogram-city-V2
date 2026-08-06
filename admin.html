@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telecom Group Chattogram City</title>
 
-    <meta name="theme-color" content="#0d47a1">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Telecom Group">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icons/icon-192.png">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Admin Dashboard | Telecom Group Chattogram City</title>
 
-    <link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#0d47a1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Telecom Group">
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
 
 <header class="header">
@@ -30,10 +34,6 @@
 </header>
 
 <div class="container">
-
-<!-- ========================= -->
-<!-- Statistics -->
-<!-- ========================= -->
 
 <div class="card">
 
@@ -65,10 +65,6 @@
 
 </div>
 
-<!-- ========================= -->
-<!-- Member List -->
-<!-- ========================= -->
-
 <div class="card">
 
 <h3>📋 সদস্য তালিকা</h3>
@@ -81,7 +77,7 @@ onkeyup="searchMember()">
 
 <div class="table-box">
 
-<table>
+<table id="memberTable">
 
 <thead>
 
@@ -92,15 +88,13 @@ onkeyup="searchMember()">
 <th>মোবাইল</th>
 <th>ব্যবসা</th>
 <th>স্ট্যাটাস</th>
-<th>অ্যাকশন</th>
+<th>Action</th>
 
 </tr>
 
 </thead>
 
 <tbody>
-
-<!-- JavaScript Data -->
 
 </tbody>
 
@@ -112,33 +106,23 @@ onkeyup="searchMember()">
 
 </div>
 
-<!-- ========================= -->
-<!-- Top Menu -->
-<!-- ========================= -->
-
 <div class="top-menu">
 
 <a href="index.html">
 🏠 হোম
 </a>
 
-<button onclick="logout()">
+<button type="button" onclick="logout()">
 🚪 Logout
 </button>
 
 </div>
 
-<!-- ========================= -->
-<!-- Member Details Modal -->
-<!-- ========================= -->
-
 <div id="memberModal" class="modal">
 
 <div class="modal-content">
 
-<span
-class="close"
-onclick="closeModal()">
+<span class="close" onclick="closeModal()">
 
 &times;
 
@@ -152,44 +136,36 @@ onclick="closeModal()">
 
 </div>
 
-<!-- ========================= -->
-<!-- JavaScript -->
-<!-- ========================= -->
+<button id="installBtn" hidden>
+📲 Install App
+</button>
+
 <script type="module" src="script.js"></script>
 
 <script>
 
 if ("serviceWorker" in navigator) {
 
-    navigator.serviceWorker.register("./service-worker.js");
+window.addEventListener("load", async () => {
+
+try {
+
+const registration =
+await navigator.serviceWorker.register("./service-worker.js");
+
+console.log("Service Worker Registered:", registration.scope);
+
+} catch(err){
+
+console.error(err);
+
+}
+
+});
 
 }
 
 </script>
-<!-- ==========================================
-     Service Worker Registration
-========================================== -->
 
-<script>
-if ("serviceWorker" in navigator) {
-
-    window.addEventListener("load", async () => {
-
-        try {
-
-            const registration = await navigator.serviceWorker.register("./service-worker.js");
-
-            console.log("✅ Service Worker Registered:", registration.scope);
-
-        } catch (error) {
-
-            console.error("❌ Service Worker Registration Failed:", error);
-
-        }
-
-    });
-
-}
-</script>
 </body>
 </html>
