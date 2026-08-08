@@ -1,21 +1,54 @@
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telecom Group Chattogram City</title>
 
-    <meta name="theme-color" content="#0d47a1">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Telecom Group">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icons/icon-192.png">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <title>Admin Login | Telecom Group Chattogram City</title>
 
-    <link rel="stylesheet" href="style.css">
+    <meta
+        name="theme-color"
+        content="#0d47a1">
+
+    <meta
+        name="mobile-web-app-capable"
+        content="yes">
+
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes">
+
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="default">
+
+    <meta
+        name="apple-mobile-web-app-title"
+        content="Telecom Group">
+
+    <link
+        rel="manifest"
+        href="manifest.json">
+
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="192x192"
+        href="icons/icon-192.png">
+
+    <link
+        rel="apple-touch-icon"
+        href="icons/icon-192.png">
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
 </head>
 
 <body>
@@ -30,7 +63,9 @@
 
             <h1>🔐 Admin Login</h1>
 
-            <h3>Telecom Group Chattogram City</h3>
+            <h3>
+                Telecom Group Chattogram City
+            </h3>
 
             <p class="subtitle">
                 শুধুমাত্র অনুমোদিত Admin লগইন করতে পারবেন।
@@ -40,11 +75,15 @@
             <!-- Login Form -->
             <!-- ========================= -->
 
-            <form id="loginForm" autocomplete="off">
+            <form
+                id="loginForm"
+                autocomplete="off">
 
                 <div class="input-group">
 
-                    <label for="email">Admin Email</label>
+                    <label for="email">
+                        Admin Email
+                    </label>
 
                     <input
                         type="email"
@@ -59,7 +98,9 @@
 
                 <div class="input-group">
 
-                    <label for="password">Password</label>
+                    <label for="password">
+                        Password
+                    </label>
 
                     <input
                         type="password"
@@ -88,7 +129,8 @@
             <!-- ========================= -->
 
             <p class="footer">
-                শুধুমাত্র অনুমোদিত অ্যাডমিন এই সিস্টেমে প্রবেশ করতে পারবেন।
+                শুধুমাত্র অনুমোদিত অ্যাডমিন এই সিস্টেমে
+                প্রবেশ করতে পারবেন।
             </p>
 
             <!-- ========================= -->
@@ -112,54 +154,73 @@
     <!-- ========================= -->
 
     <noscript>
-        <p style="text-align:center;color:red;font-weight:bold;margin:20px;">
-            এই ওয়েবসাইট ব্যবহারের জন্য JavaScript চালু করুন।
+
+        <p
+            style="
+                text-align:center;
+                color:red;
+                font-weight:bold;
+                margin:20px;
+            ">
+
+            এই ওয়েবসাইট ব্যবহারের জন্য
+            JavaScript চালু করুন।
+
         </p>
+
     </noscript>
 
     <!-- ========================= -->
-    <!-- JavaScript -->
+    <!-- Login JavaScript -->
     <!-- ========================= -->
 
-    <script type="module" src="login.js"></script>
+    <script
+        type="module"
+        src="login.js">
+    </script>
+
+
+    <!-- ========================= -->
+    <!-- Service Worker -->
+    <!-- একবারই Register হবে -->
+    <!-- ========================= -->
 
     <script>
-        window.addEventListener("load", async () => {
-            if ("serviceWorker" in navigator) {
-                try {
-                    await navigator.serviceWorker.register("./service-worker.js");
-                    console.log("✅ Service Worker Registered");
-                } catch (error) {
-                    console.error("❌ Service Worker Registration Failed:", error);
+
+        if ("serviceWorker" in navigator) {
+
+            window.addEventListener(
+                "load",
+                async () => {
+
+                    try {
+
+                        const registration =
+                            await navigator.serviceWorker.register(
+                                "./service-worker.js"
+                            );
+
+                        console.log(
+                            "✅ Service Worker Registered:",
+                            registration.scope
+                        );
+
+                    } catch (error) {
+
+                        console.error(
+                            "❌ Service Worker Registration Failed:",
+                            error
+                        );
+
+                    }
+
                 }
-            }
-        });
-    </script>
-<!-- ==========================================
-     Service Worker Registration
-========================================== -->
-
-<script>
-if ("serviceWorker" in navigator) {
-
-    window.addEventListener("load", async () => {
-
-        try {
-
-            const registration = await navigator.serviceWorker.register("./service-worker.js");
-
-            console.log("✅ Service Worker Registered:", registration.scope);
-
-        } catch (error) {
-
-            console.error("❌ Service Worker Registration Failed:", error);
+            );
 
         }
 
-    });
+    </script>
 
-}
-</script>
 </body>
 
 </html>
