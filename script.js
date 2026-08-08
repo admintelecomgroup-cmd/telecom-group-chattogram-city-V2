@@ -1101,24 +1101,38 @@ async function deleteMember(id) {
    LOGOUT
    ========================================================= */
 
-function logout() {
+async function logout() {
 
     try {
 
-        localStorage.removeItem(
-            "admin"
-        );
+        const { error } =
+            await supabase.auth.signOut();
 
-        sessionStorage.removeItem(
-            "admin"
+        if (error) {
+            console.error(
+                "Logout Error:",
+                error
+            );
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Logout Error:",
+            error
         );
 
     } finally {
 
+        localStorage.removeItem("admin");
+        sessionStorage.clear();
+
         window.location.replace(
             "./login.html"
         );
+
     }
+
 }
 
 /* =========================================================
