@@ -3,7 +3,7 @@
 // Service Worker
 // ==========================================
 
-const CACHE_NAME = "telecom-group-v2";
+const CACHE_NAME = "telecom-group-v3";
 
 const FILES_TO_CACHE = [
   "./",
