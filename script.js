@@ -1,74 +1,92 @@
 "use strict";
 
-// =======================================================
-// Telecom Group Chattogram City
-// script.js
-// Supabase Version
-// =======================================================
-
 import { supabase } from "./supabase.js";
 
-
-// =======================================================
-// Global Variables
-// =======================================================
+/* =========================================================
+   TELECOM GROUP CHATTOGRAM CITY
+   Complete script.js
+   ========================================================= */
 
 const form = document.getElementById("memberForm");
-const table = document.querySelector("table");
+const table = document.querySelector("#memberTable");
+const businessSelect = document.getElementById("business");
+const businessCount = document.getElementById("businessCount");
 
+let deferredPrompt = null;
 
-// =======================================================
-// Alert
-// =======================================================
+/* =========================================================
+   BASIC HELPERS
+   ========================================================= */
 
 function showAlert(message) {
-
     alert(message);
-
 }
-
-
-// =======================================================
-// Loading Button
-// =======================================================
 
 function startLoading() {
-
-    const btn =
-        document.getElementById("submitBtn");
+    const btn = document.getElementById("submitBtn");
 
     if (btn) {
-
         btn.disabled = true;
-
-        btn.innerHTML =
-            "⏳ অপেক্ষা করুন...";
-
+        btn.textContent = "⏳ অপেক্ষা করুন...";
     }
-
 }
-
 
 function stopLoading() {
-
-    const btn =
-        document.getElementById("submitBtn");
+    const btn = document.getElementById("submitBtn");
 
     if (btn) {
-
         btn.disabled = false;
-
-        btn.innerHTML =
-            "আবেদন জমা দিন";
-
+        btn.textContent = "আবেদন জমা দিন";
     }
-
 }
 
+/* =========================================================
+   BUSINESS MULTI SELECT - MAX 10
+   ========================================================= */
 
-// =======================================================
-// Upload File
-// =======================================================
+function updateBusinessCount() {
+    if (!businessSelect) return;
+
+    const selected =
+        Array.from(businessSelect.selectedOptions);
+
+    if (businessCount) {
+        businessCount.textContent =
+            `নির্বাচিত: ${selected.length} / 10`;
+    }
+}
+
+if (businessSelect) {
+
+    businessSelect.addEventListener(
+        "change",
+        () => {
+
+            const selected =
+                Array.from(
+                    businessSelect.selectedOptions
+                );
+
+            if (selected.length > 10) {
+
+                selected[selected.length - 1]
+                    .selected = false;
+
+                showAlert(
+                    "⚠️ সর্বোচ্চ ১০টি ব্যবসার ধরন নির্বাচন করা যাবে।"
+                );
+            }
+
+            updateBusinessCount();
+        }
+    );
+
+    updateBusinessCount();
+}
+
+/* =========================================================
+   FILE UPLOAD
+   ========================================================= */
 
 async function uploadFile(file, bucket) {
 
@@ -89,7 +107,6 @@ async function uploadFile(file, bucket) {
         "_" +
         safeName;
 
-
     const { error } =
         await supabase.storage
             .from(bucket)
@@ -101,28 +118,21 @@ async function uploadFile(file, bucket) {
                 }
             );
 
-
     if (error) {
-
         throw error;
-
     }
-
 
     const { data } =
         supabase.storage
             .from(bucket)
             .getPublicUrl(fileName);
 
-
     return data.publicUrl;
-
 }
 
-
-// =======================================================
-// Duplicate Mobile Check
-// =======================================================
+/* =========================================================
+   DUPLICATE CHECK
+   ========================================================= */
 
 async function mobileExists(mobile) {
 
@@ -133,23 +143,12 @@ async function mobileExists(mobile) {
             .eq("mobile", mobile)
             .limit(1);
 
-
     if (error) {
-
         throw error;
-
     }
 
-
-    return data &&
-           data.length > 0;
-
+    return data && data.length > 0;
 }
-
-
-// =======================================================
-// Duplicate NID Check
-// =======================================================
 
 async function nidExists(nid) {
 
@@ -160,97 +159,16 @@ async function nidExists(nid) {
             .eq("nid", nid)
             .limit(1);
 
-
     if (error) {
-
         throw error;
-
     }
 
-
-    return data &&
-           data.length > 0;
-
+    return data && data.length > 0;
 }
 
-
-// =======================================================
-// Business Multi Select
-// Maximum 10
-// =======================================================
-
-const businessSelect =
-    document.getElementById("business");
-
-const businessCount =
-    document.getElementById("businessCount");
-
-
-function updateBusinessCount() {
-
-    if (!businessSelect) return;
-
-
-    const selected =
-        Array.from(
-            businessSelect.selectedOptions
-        );
-
-
-    if (businessCount) {
-
-        businessCount.textContent =
-            `নির্বাচিত: ${selected.length} / 10`;
-
-    }
-
-}
-
-
-if (businessSelect) {
-
-    businessSelect.addEventListener(
-        "change",
-        function () {
-
-            const selected =
-                Array.from(
-                    businessSelect.selectedOptions
-                );
-
-
-            /*
-             * Maximum 10 selections
-             */
-
-            if (selected.length > 10) {
-
-                const lastSelected =
-                    selected[selected.length - 1];
-
-                lastSelected.selected = false;
-
-                showAlert(
-                    "⚠️ সর্বোচ্চ ১০টি ব্যবসার ধরন নির্বাচন করা যাবে।"
-                );
-
-            }
-
-
-            updateBusinessCount();
-
-        }
-    );
-
-
-    updateBusinessCount();
-
-}
-
-
-// =======================================================
-// Register Member
-// =======================================================
+/* =========================================================
+   MEMBER REGISTRATION
+   ========================================================= */
 
 async function registerMember() {
 
@@ -258,73 +176,61 @@ async function registerMember() {
 
         startLoading();
 
-
-        // =================================================
-        // Personal Information
-        // =================================================
-
         const name =
-            document
-                .getElementById("name")
-                .value
-                .trim();
-
+            document.getElementById("name")
+                ?.value.trim() || "";
 
         const mobile =
-            document
-                .getElementById("mobile")
-                .value
-                .trim();
-
+            document.getElementById("mobile")
+                ?.value.trim() || "";
 
         const whatsapp =
-            document
-                .getElementById("whatsapp")
-                .value
-                .trim();
-
+            document.getElementById("whatsapp")
+                ?.value.trim() || "";
 
         const email =
-            document
-                .getElementById("email")
-                .value
-                .trim();
-
+            document.getElementById("email")
+                ?.value.trim() || "";
 
         const dob =
-            document
-                .getElementById("dob")
-                .value;
-
-
-        // =================================================
-        // Business Information
-        // =================================================
+            document.getElementById("dob")
+                ?.value || "";
 
         const shop =
-            document
-                .getElementById("shop")
-                .value
-                .trim();
-
+            document.getElementById("shop")
+                ?.value.trim() || "";
 
         const address =
-            document
-                .getElementById("address")
-                .value
-                .trim();
-
+            document.getElementById("address")
+                ?.value.trim() || "";
 
         const map =
-            document
-                .getElementById("map")
-                .value
-                .trim();
+            document.getElementById("map")
+                ?.value.trim() || "";
 
+        const nid =
+            document.getElementById("nid")
+                ?.value.trim() || "";
 
-        // =================================================
-        // Multiple Business Types
-        // =================================================
+        const agree =
+            document.getElementById("agree")
+                ?.checked || false;
+
+        const photo =
+            document.getElementById("photo")
+                ?.files?.[0];
+
+        const shopImage =
+            document.getElementById("shopImage")
+                ?.files?.[0];
+
+        const tradeLicense =
+            document.getElementById("tradeLicense")
+                ?.files?.[0];
+
+        const nidImage =
+            document.getElementById("nidImage")
+                ?.files?.[0];
 
         const selectedBusinessTypes =
             businessSelect
@@ -335,166 +241,72 @@ async function registerMember() {
                 )
                 : [];
 
-
-        // =================================================
-        // Documents
-        // =================================================
-
-        const nid =
-            document
-                .getElementById("nid")
-                .value
-                .trim();
-
-
-        const agree =
-            document
-                .getElementById("agree")
-                .checked;
-
-
-        const photo =
-            document
-                .getElementById("photo")
-                .files[0];
-
-
-        const shopImage =
-            document
-                .getElementById("shopImage")
-                .files[0];
-
-
-        const tradeLicense =
-            document
-                .getElementById("tradeLicense")
-                .files[0];
-
-
-        const nidImage =
-            document
-                .getElementById("nidImage")
-                .files[0];
-
-
-        // =================================================
-        // Validation
-        // =================================================
+        /* Validation */
 
         if (!name) {
-
-            showAlert(
-                "পূর্ণ নাম লিখুন"
-            );
-
+            showAlert("পূর্ণ নাম লিখুন");
             return;
-
         }
 
-
         if (!/^[0-9]{11}$/.test(mobile)) {
-
             showAlert(
                 "সঠিক ১১ সংখ্যার মোবাইল নম্বর লিখুন"
             );
-
             return;
-
         }
-
 
         if (!shop) {
-
-            showAlert(
-                "দোকানের নাম লিখুন"
-            );
-
+            showAlert("দোকানের নাম লিখুন");
             return;
-
         }
-
 
         if (
             selectedBusinessTypes.length < 1
         ) {
-
             showAlert(
                 "কমপক্ষে ১টি ব্যবসার ধরন নির্বাচন করুন"
             );
-
             return;
-
         }
-
 
         if (
             selectedBusinessTypes.length > 10
         ) {
-
             showAlert(
                 "সর্বোচ্চ ১০টি ব্যবসার ধরন নির্বাচন করা যাবে"
             );
-
             return;
-
         }
 
-
         if (!/^[0-9]{17}$/.test(nid)) {
-
             showAlert(
                 "১৭ সংখ্যার NID লিখুন"
             );
-
             return;
-
         }
 
-
         if (!agree) {
-
             showAlert(
                 "ঘোষণাপত্রে টিক দিন"
             );
-
             return;
-
         }
 
-
-        // =================================================
-        // Duplicate Check
-        // =================================================
-
-        if (
-            await mobileExists(mobile)
-        ) {
-
+        if (await mobileExists(mobile)) {
             showAlert(
                 "এই মোবাইল নম্বর আগে থেকেই নিবন্ধিত"
             );
-
             return;
-
         }
 
-
-        if (
-            await nidExists(nid)
-        ) {
-
+        if (await nidExists(nid)) {
             showAlert(
                 "এই NID আগে থেকেই নিবন্ধিত"
             );
-
             return;
-
         }
 
-
-        // =================================================
-        // Upload Files
-        // =================================================
+        /* Upload */
 
         const photoURL =
             await uploadFile(
@@ -502,13 +314,11 @@ async function registerMember() {
                 "member-photo"
             );
 
-
         const shopImageURL =
             await uploadFile(
                 shopImage,
                 "shop-photo"
             );
-
 
         const tradeLicenseURL =
             await uploadFile(
@@ -516,121 +326,57 @@ async function registerMember() {
                 "trade-license"
             );
 
-
         const nidImageURL =
             await uploadFile(
                 nidImage,
                 "nid-photo"
             );
 
-
-        // =================================================
-        // Member ID
-        // =================================================
-
         const memberId =
-            "TG-" +
-            Date.now();
-
-
-        // =================================================
-        // Business Types
-        //
-        // Stored as:
-        // মোবাইল শপ, বিকাশ এজেন্ট, নগদ এজেন্ট
-        // =================================================
+            "TG-" + Date.now();
 
         const business =
             selectedBusinessTypes.join(", ");
 
-
-        // =================================================
-        // Save Database
-        // =================================================
+        /* Database */
 
         const { error } =
             await supabase
                 .from("members")
                 .insert([
                     {
-
-                        memberid:
-                            memberId,
-
-                        name:
-                            name,
-
-                        mobile:
-                            mobile,
-
-                        whatsapp:
-                            whatsapp,
-
-                        email:
-                            email,
-
-                        dob:
-                            dob,
-
-                        shop:
-                            shop,
-
-                        address:
-                            address,
-
-                        map:
-                            map,
-
-                        business:
-                            business,
-
-                        nid:
-                            nid,
-
-                        photo:
-                            photoURL,
-
-                        shopimage:
-                            shopImageURL,
-
-                        tradelicense:
-                            tradeLicenseURL,
-
-                        nidimage:
-                            nidImageURL,
-
-                        status:
-                            "Pending"
-
+                        memberid: memberId,
+                        name: name,
+                        mobile: mobile,
+                        whatsapp: whatsapp,
+                        email: email,
+                        dob: dob,
+                        shop: shop,
+                        address: address,
+                        map: map,
+                        business: business,
+                        nid: nid,
+                        photo: photoURL,
+                        shopimage: shopImageURL,
+                        tradelicense: tradeLicenseURL,
+                        nidimage: nidImageURL,
+                        status: "Pending"
                     }
                 ]);
 
-
         if (error) {
-
             throw error;
-
         }
-
-
-        // =================================================
-        // Success
-        // =================================================
 
         showAlert(
             "✅ আবেদন সফলভাবে জমা হয়েছে"
         );
 
-
         if (form) {
-
             form.reset();
-
         }
 
-
         updateBusinessCount();
-
 
     } catch (error) {
 
@@ -639,31 +385,27 @@ async function registerMember() {
             error
         );
 
-
         showAlert(
-            error.message ||
+            error?.message ||
             "❌ আবেদন জমা দিতে সমস্যা হয়েছে"
         );
-
 
     } finally {
 
         stopLoading();
 
     }
-
 }
 
-
-// =======================================================
-// Submit Event
-// =======================================================
+/* =========================================================
+   FORM SUBMIT
+   ========================================================= */
 
 if (form) {
 
     form.addEventListener(
         "submit",
-        function (event) {
+        event => {
 
             event.preventDefault();
 
@@ -671,35 +413,33 @@ if (form) {
 
         }
     );
-
 }
 
-
-// =======================================================
-// Admin Dashboard
-// =======================================================
+/* =========================================================
+   ADMIN - LOAD MEMBERS
+   ========================================================= */
 
 async function loadMembers() {
 
     if (!table) return;
 
-
     try {
 
-        table.innerHTML = `
-            <thead>
-                <tr>
-                    <th>Member ID</th>
-                    <th>নাম</th>
-                    <th>মোবাইল</th>
-                    <th>ব্যবসা</th>
-                    <th>স্ট্যাটাস</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        `;
+        const tbody =
+            document.getElementById(
+                "memberTableBody"
+            );
 
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6"
+                        style="text-align:center;">
+                        ⏳ সদস্য তথ্য লোড হচ্ছে...
+                    </td>
+                </tr>
+            `;
+        }
 
         const { data: members, error } =
             await supabase
@@ -712,134 +452,144 @@ async function loadMembers() {
                     }
                 );
 
-
         if (error) {
-
             throw error;
-
         }
 
+        if (!tbody) return;
 
-        const tbody =
-            table.querySelector("tbody");
-
+        tbody.innerHTML = "";
 
         let total = 0;
         let pending = 0;
         let approved = 0;
         let rejected = 0;
 
+        if (!members || members.length === 0) {
 
-        members.forEach(member => {
-
-            total++;
-
-
-            if (
-                member.status === "Pending"
-            ) {
-
-                pending++;
-
-            }
-
-
-            if (
-                member.status === "Approved"
-            ) {
-
-                approved++;
-
-            }
-
-
-            if (
-                member.status === "Rejected"
-            ) {
-
-                rejected++;
-
-            }
-
-
-            tbody.innerHTML += `
+            tbody.innerHTML = `
                 <tr>
+                    <td colspan="6"
+                        style="text-align:center;">
+                        কোনো সদস্য পাওয়া যায়নি।
+                    </td>
+                </tr>
+            `;
+
+        } else {
+
+            members.forEach(member => {
+
+                total++;
+
+                if (
+                    member.status === "Pending"
+                ) {
+                    pending++;
+                }
+
+                if (
+                    member.status === "Approved"
+                ) {
+                    approved++;
+                }
+
+                if (
+                    member.status === "Rejected"
+                ) {
+                    rejected++;
+                }
+
+                const row =
+                    document.createElement("tr");
+
+                row.innerHTML = `
 
                     <td>
-                        ${member.memberid || "-"}
+                        ${escapeHTML(
+                            member.memberid || "-"
+                        )}
                     </td>
 
                     <td>
-                        ${member.name || "-"}
+                        ${escapeHTML(
+                            member.name || "-"
+                        )}
                     </td>
 
                     <td>
-                        ${member.mobile || "-"}
+                        ${escapeHTML(
+                            member.mobile || "-"
+                        )}
                     </td>
 
                     <td>
-                        ${member.business || "-"}
+                        ${escapeHTML(
+                            member.business || "-"
+                        )}
                     </td>
 
                     <td>
-                        ${member.status || "-"}
+                        ${escapeHTML(
+                            member.status || "-"
+                        )}
                     </td>
 
                     <td>
 
                         <button
-                            onclick="viewMember(${member.id})">
+                            type="button"
+                            class="member-action"
+                            data-action="view"
+                            data-id="${member.id}">
                             👁️
                         </button>
 
                         <button
-                            onclick="approveMember(${member.id})">
+                            type="button"
+                            class="member-action"
+                            data-action="approve"
+                            data-id="${member.id}">
                             ✅
                         </button>
 
                         <button
-                            onclick="rejectMember(${member.id})">
+                            type="button"
+                            class="member-action"
+                            data-action="reject"
+                            data-id="${member.id}">
                             ❌
                         </button>
 
                         <button
-                            onclick="editMember(${member.id})">
+                            type="button"
+                            class="member-action"
+                            data-action="edit"
+                            data-id="${member.id}">
                             ✏️
                         </button>
 
                         <button
-                            onclick="deleteMember(${member.id})">
+                            type="button"
+                            class="member-action"
+                            data-action="delete"
+                            data-id="${member.id}">
                             🗑️
                         </button>
 
                     </td>
+                `;
 
-                </tr>
-            `;
-
-        });
-
-
-        const stats =
-            document.querySelectorAll("b");
-
-
-        if (stats.length >= 4) {
-
-            stats[0].textContent =
-                total;
-
-            stats[1].textContent =
-                pending;
-
-            stats[2].textContent =
-                approved;
-
-            stats[3].textContent =
-                rejected;
-
+                tbody.appendChild(row);
+            });
         }
 
+        updateStats(
+            total,
+            pending,
+            approved,
+            rejected
+        );
 
     } catch (error) {
 
@@ -849,167 +599,254 @@ async function loadMembers() {
         );
 
         showAlert(
-            error.message
+            error?.message ||
+            "সদস্য তথ্য লোড করা যায়নি।"
+        );
+    }
+}
+
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+/* =========================================================
+   UPDATE STATS
+   ========================================================= */
+
+function updateStats(
+    total,
+    pending,
+    approved,
+    rejected
+) {
+
+    const cards =
+        document.querySelectorAll(
+            ".stat-card p b"
         );
 
+    if (cards.length >= 4) {
+
+        cards[0].textContent = total;
+        cards[1].textContent = pending;
+        cards[2].textContent = approved;
+        cards[3].textContent = rejected;
     }
-
 }
 
-
-// =======================================================
-// Auto Load Dashboard
-// =======================================================
-
-if (table) {
-
-    loadMembers();
-
-}
-
-
-// =======================================================
-// View Member
-// =======================================================
+/* =========================================================
+   VIEW MEMBER
+   ========================================================= */
 
 async function viewMember(id) {
 
-    const { data, error } =
-        await supabase
-            .from("members")
-            .select("*")
-            .eq("id", id)
-            .single();
+    try {
 
+        const { data, error } =
+            await supabase
+                .from("members")
+                .select("*")
+                .eq("id", id)
+                .single();
 
-    if (error) {
+        if (error) {
+            throw error;
+        }
+
+        const details =
+            document.getElementById(
+                "memberDetails"
+            );
+
+        const modal =
+            document.getElementById(
+                "memberModal"
+            );
+
+        if (!details || !modal) {
+            return;
+        }
+
+        details.innerHTML = `
+
+            <p>
+                <b>Member ID:</b>
+                ${escapeHTML(
+                    data.memberid || "-"
+                )}
+            </p>
+
+            <p>
+                <b>নাম:</b>
+                ${escapeHTML(
+                    data.name || "-"
+                )}
+            </p>
+
+            <p>
+                <b>মোবাইল:</b>
+                ${escapeHTML(
+                    data.mobile || "-"
+                )}
+            </p>
+
+            <p>
+                <b>WhatsApp:</b>
+                ${escapeHTML(
+                    data.whatsapp || "-"
+                )}
+            </p>
+
+            <p>
+                <b>Email:</b>
+                ${escapeHTML(
+                    data.email || "-"
+                )}
+            </p>
+
+            <p>
+                <b>জন্ম তারিখ:</b>
+                ${escapeHTML(
+                    data.dob || "-"
+                )}
+            </p>
+
+            <p>
+                <b>দোকানের নাম:</b>
+                ${escapeHTML(
+                    data.shop || "-"
+                )}
+            </p>
+
+            <p>
+                <b>ঠিকানা:</b>
+                ${escapeHTML(
+                    data.address || "-"
+                )}
+            </p>
+
+            <p>
+                <b>Google Maps:</b>
+                ${
+                    data.map
+                    ? `
+                        <a
+                            href="${escapeHTML(data.map)}"
+                            target="_blank"
+                            rel="noopener">
+                            📍 Maps
+                        </a>
+                    `
+                    : "-"
+                }
+            </p>
+
+            <p>
+                <b>ব্যবসা:</b>
+                ${escapeHTML(
+                    data.business || "-"
+                )}
+            </p>
+
+            <p>
+                <b>NID:</b>
+                ${escapeHTML(
+                    data.nid || "-"
+                )}
+            </p>
+
+            <p>
+                <b>স্ট্যাটাস:</b>
+                ${escapeHTML(
+                    data.status || "-"
+                )}
+            </p>
+
+            ${
+                data.photo
+                ? `
+                    <p>
+                        <b>সদস্যের ছবি:</b><br>
+                        <img
+                            src="${escapeHTML(data.photo)}"
+                            width="150">
+                    </p>
+                `
+                : ""
+            }
+
+            ${
+                data.shopimage
+                ? `
+                    <p>
+                        <b>দোকানের ছবি:</b><br>
+                        <img
+                            src="${escapeHTML(data.shopimage)}"
+                            width="150">
+                    </p>
+                `
+                : ""
+            }
+
+            ${
+                data.nidimage
+                ? `
+                    <p>
+                        <b>NID:</b><br>
+                        <img
+                            src="${escapeHTML(data.nidimage)}"
+                            width="150">
+                    </p>
+                `
+                : ""
+            }
+
+            ${
+                data.tradelicense
+                ? `
+                    <p>
+                        <a
+                            href="${escapeHTML(data.tradelicense)}"
+                            target="_blank"
+                            rel="noopener">
+                            📄 Trade License দেখুন
+                        </a>
+                    </p>
+                `
+                : ""
+            }
+
+        `;
+
+        modal.style.display = "block";
+
+    } catch (error) {
+
+        console.error(
+            "View Member Error:",
+            error
+        );
 
         showAlert(
-            error.message
+            error?.message ||
+            "সদস্যের তথ্য দেখা যায়নি।"
         );
-
-        return;
-
     }
-
-
-    const details =
-        document.getElementById(
-            "memberDetails"
-        );
-
-
-    if (!details) return;
-
-
-    details.innerHTML = `
-
-        <p>
-            <b>Member ID:</b>
-            ${data.memberid || "-"}
-        </p>
-
-        <p>
-            <b>নাম:</b>
-            ${data.name || ""}
-        </p>
-
-        <p>
-            <b>মোবাইল:</b>
-            ${data.mobile || ""}
-        </p>
-
-        <p>
-            <b>WhatsApp:</b>
-            ${data.whatsapp || ""}
-        </p>
-
-        <p>
-            <b>Email:</b>
-            ${data.email || ""}
-        </p>
-
-        <p>
-            <b>জন্ম তারিখ:</b>
-            ${data.dob || ""}
-        </p>
-
-        <p>
-            <b>দোকানের নাম:</b>
-            ${data.shop || ""}
-        </p>
-
-        <p>
-            <b>ঠিকানা:</b>
-            ${data.address || ""}
-        </p>
-
-        <p>
-            <b>ব্যবসা:</b>
-            ${data.business || ""}
-        </p>
-
-        <p>
-            <b>NID:</b>
-            ${data.nid || ""}
-        </p>
-
-        <p>
-            <b>স্ট্যাটাস:</b>
-            ${data.status || ""}
-        </p>
-
-        ${
-            data.photo
-                ? `<img src="${data.photo}" width="120"><br>`
-                : ""
-        }
-
-        ${
-            data.shopimage
-                ? `<img src="${data.shopimage}" width="120"><br>`
-                : ""
-        }
-
-        ${
-            data.nidimage
-                ? `<img src="${data.nidimage}" width="120"><br>`
-                : ""
-        }
-
-        ${
-            data.tradelicense
-                ? `<a
-                    href="${data.tradelicense}"
-                    target="_blank"
-                    rel="noopener">
-                    📄 Trade License
-                   </a>`
-                : ""
-        }
-
-    `;
-
-
-    const modal =
-        document.getElementById(
-            "memberModal"
-        );
-
-
-    if (modal) {
-
-        modal.style.display =
-            "block";
-
-    }
-
 }
 
-
-// =======================================================
-// Close Modal
-// =======================================================
+/* =========================================================
+   CLOSE MODAL
+   ========================================================= */
 
 function closeModal() {
 
@@ -1018,264 +855,275 @@ function closeModal() {
             "memberModal"
         );
 
-
     if (modal) {
-
-        modal.style.display =
-            "none";
-
+        modal.style.display = "none";
     }
-
 }
 
-
-// =======================================================
-// Approve Member
-// =======================================================
+/* =========================================================
+   APPROVE
+   ========================================================= */
 
 async function approveMember(id) {
 
-    const { error } =
-        await supabase
-            .from("members")
-            .update({
-                status: "Approved"
-            })
-            .eq("id", id);
-
-
-    if (error) {
-
-        showAlert(
-            error.message
-        );
-
+    if (
+        !confirm(
+            "এই সদস্যকে Approved করতে চান?"
+        )
+    ) {
         return;
-
     }
 
+    try {
 
-    loadMembers();
+        const { error } =
+            await supabase
+                .from("members")
+                .update({
+                    status: "Approved"
+                })
+                .eq("id", id);
 
+        if (error) {
+            throw error;
+        }
+
+        showAlert(
+            "✅ Member Approved"
+        );
+
+        await loadMembers();
+
+    } catch (error) {
+
+        console.error(
+            "Approve Error:",
+            error
+        );
+
+        showAlert(
+            error?.message ||
+            "Approve করা যায়নি।"
+        );
+    }
 }
 
-
-// =======================================================
-// Reject Member
-// =======================================================
+/* =========================================================
+   REJECT
+   ========================================================= */
 
 async function rejectMember(id) {
 
-    const { error } =
-        await supabase
-            .from("members")
-            .update({
-                status: "Rejected"
-            })
-            .eq("id", id);
-
-
-    if (error) {
-
-        showAlert(
-            error.message
-        );
-
+    if (
+        !confirm(
+            "এই সদস্যকে Rejected করতে চান?"
+        )
+    ) {
         return;
-
     }
 
+    try {
 
-    loadMembers();
+        const { error } =
+            await supabase
+                .from("members")
+                .update({
+                    status: "Rejected"
+                })
+                .eq("id", id);
 
+        if (error) {
+            throw error;
+        }
+
+        showAlert(
+            "❌ Member Rejected"
+        );
+
+        await loadMembers();
+
+    } catch (error) {
+
+        console.error(
+            "Reject Error:",
+            error
+        );
+
+        showAlert(
+            error?.message ||
+            "Reject করা যায়নি।"
+        );
+    }
 }
 
-
-// =======================================================
-// Edit Member
-// =======================================================
+/* =========================================================
+   EDIT
+   ========================================================= */
 
 async function editMember(id) {
 
-    const { data, error } =
-        await supabase
-            .from("members")
-            .select("*")
-            .eq("id", id)
-            .single();
+    try {
 
+        const { data, error } =
+            await supabase
+                .from("members")
+                .select("*")
+                .eq("id", id)
+                .single();
 
-    if (error) {
+        if (error) {
+            throw error;
+        }
 
-        showAlert(
-            error.message
-        );
+        const name =
+            prompt(
+                "নাম",
+                data.name || ""
+            );
 
-        return;
+        if (name === null) return;
 
-    }
+        const mobile =
+            prompt(
+                "মোবাইল",
+                data.mobile || ""
+            );
 
+        if (mobile === null) return;
 
-    const name =
-        prompt(
-            "নাম",
-            data.name || ""
-        );
+        const shop =
+            prompt(
+                "দোকানের নাম",
+                data.shop || ""
+            );
 
+        if (shop === null) return;
 
-    if (name === null) return;
+        const address =
+            prompt(
+                "ঠিকানা",
+                data.address || ""
+            );
 
+        if (address === null) return;
 
-    const mobile =
-        prompt(
-            "মোবাইল",
-            data.mobile || ""
-        );
+        const business =
+            prompt(
+                "ব্যবসার ধরন",
+                data.business || ""
+            );
 
+        if (business === null) return;
 
-    if (mobile === null) return;
+        const { error: updateError } =
+            await supabase
+                .from("members")
+                .update({
+                    name: name.trim(),
+                    mobile: mobile.trim(),
+                    shop: shop.trim(),
+                    address: address.trim(),
+                    business: business.trim()
+                })
+                .eq("id", id);
 
-
-    const shop =
-        prompt(
-            "দোকানের নাম",
-            data.shop || ""
-        );
-
-
-    if (shop === null) return;
-
-
-    const address =
-        prompt(
-            "ঠিকানা",
-            data.address || ""
-        );
-
-
-    if (address === null) return;
-
-
-    const business =
-        prompt(
-            "ব্যবসার ধরন",
-            data.business || ""
-        );
-
-
-    if (business === null) return;
-
-
-    const { error: updateError } =
-        await supabase
-            .from("members")
-            .update({
-
-                name:
-                    name.trim(),
-
-                mobile:
-                    mobile.trim(),
-
-                shop:
-                    shop.trim(),
-
-                address:
-                    address.trim(),
-
-                business:
-                    business.trim()
-
-            })
-            .eq("id", id);
-
-
-    if (updateError) {
+        if (updateError) {
+            throw updateError;
+        }
 
         showAlert(
-            updateError.message
+            "✅ তথ্য সফলভাবে আপডেট হয়েছে"
         );
 
-        return;
+        await loadMembers();
 
+    } catch (error) {
+
+        console.error(
+            "Edit Error:",
+            error
+        );
+
+        showAlert(
+            error?.message ||
+            "তথ্য আপডেট করা যায়নি।"
+        );
     }
-
-
-    showAlert(
-        "✅ তথ্য আপডেট হয়েছে"
-    );
-
-
-    loadMembers();
-
 }
 
-
-// =======================================================
-// Delete Member
-// =======================================================
+/* =========================================================
+   DELETE
+   ========================================================= */
 
 async function deleteMember(id) {
 
     if (
         !confirm(
-            "আপনি কি সদস্যটি Delete করতে চান?"
+            "আপনি কি এই সদস্যটি Delete করতে চান?"
         )
     ) {
-
         return;
-
     }
 
+    try {
 
-    const { error } =
-        await supabase
-            .from("members")
-            .delete()
-            .eq("id", id);
+        const { error } =
+            await supabase
+                .from("members")
+                .delete()
+                .eq("id", id);
 
-
-    if (error) {
+        if (error) {
+            throw error;
+        }
 
         showAlert(
-            error.message
+            "✅ Member Deleted"
         );
 
-        return;
+        await loadMembers();
 
+    } catch (error) {
+
+        console.error(
+            "Delete Error:",
+            error
+        );
+
+        showAlert(
+            error?.message ||
+            "Member Delete করা যায়নি।"
+        );
     }
-
-
-    showAlert(
-        "✅ Member Deleted"
-    );
-
-
-    loadMembers();
-
 }
 
-
-// =======================================================
-// Logout
-// =======================================================
+/* =========================================================
+   LOGOUT
+   ========================================================= */
 
 function logout() {
 
-    localStorage.removeItem(
-        "admin"
-    );
+    try {
 
+        localStorage.removeItem(
+            "admin"
+        );
 
-    window.location.href =
-        "login.html";
+        sessionStorage.removeItem(
+            "admin"
+        );
 
+    } finally {
+
+        window.location.replace(
+            "./login.html"
+        );
+    }
 }
 
-
-// =======================================================
-// Search Member
-// =======================================================
+/* =========================================================
+   SEARCH
+   ========================================================= */
 
 function searchMember() {
 
@@ -1284,106 +1132,166 @@ function searchMember() {
             "search"
         );
 
+    const tbody =
+        document.getElementById(
+            "memberTableBody"
+        );
 
-    if (!input || !table) return;
-
+    if (!input || !tbody) return;
 
     const filter =
         input.value
-            .toLowerCase();
-
+            .toLowerCase()
+            .trim();
 
     const rows =
-        table.getElementsByTagName(
-            "tr"
-        );
+        tbody.querySelectorAll("tr");
 
+    rows.forEach(row => {
 
-    for (
-        let i = 1;
-        i < rows.length;
-        i++
-    ) {
-
-        rows[i].style.display =
-            rows[i]
-                .innerText
+        row.style.display =
+            row.innerText
                 .toLowerCase()
                 .includes(filter)
                 ? ""
                 : "none";
 
-    }
-
+    });
 }
 
+/* =========================================================
+   IMPORTANT:
+   ADMIN BUTTON EVENT DELEGATION
+   ========================================================= */
 
-// =======================================================
-// Close Modal Outside Click
-// =======================================================
+document.addEventListener(
+    "click",
+    async event => {
 
-window.onclick =
-    function (event) {
+        const button =
+            event.target.closest(
+                ".member-action"
+            );
+
+        if (button) {
+
+            const action =
+                button.dataset.action;
+
+            const id =
+                button.dataset.id;
+
+            if (!id) return;
+
+            button.disabled = true;
+
+            try {
+
+                if (action === "view") {
+                    await viewMember(id);
+                }
+
+                else if (
+                    action === "approve"
+                ) {
+                    await approveMember(id);
+                }
+
+                else if (
+                    action === "reject"
+                ) {
+                    await rejectMember(id);
+                }
+
+                else if (
+                    action === "edit"
+                ) {
+                    await editMember(id);
+                }
+
+                else if (
+                    action === "delete"
+                ) {
+                    await deleteMember(id);
+                }
+
+            } finally {
+
+                button.disabled = false;
+
+            }
+
+            return;
+        }
+
+        /* Logout */
+
+        const logoutButton =
+            event.target.closest(
+                '[data-action="logout"]'
+            );
+
+        if (logoutButton) {
+
+            logout();
+
+        }
+    }
+);
+
+/* =========================================================
+   SEARCH EVENT
+   ========================================================= */
+
+const searchInput =
+    document.getElementById("search");
+
+if (searchInput) {
+
+    searchInput.addEventListener(
+        "input",
+        searchMember
+    );
+}
+
+/* =========================================================
+   MODAL CLOSE
+   ========================================================= */
+
+const closeButton =
+    document.querySelector(
+        ".close"
+    );
+
+if (closeButton) {
+
+    closeButton.addEventListener(
+        "click",
+        closeModal
+    );
+}
+
+window.addEventListener(
+    "click",
+    event => {
 
         const modal =
             document.getElementById(
                 "memberModal"
             );
 
-
         if (
             modal &&
             event.target === modal
         ) {
-
             closeModal();
-
         }
+    }
+);
 
-    };
-
-
-// =======================================================
-// Global Functions
-// =======================================================
-
-window.viewMember =
-    viewMember;
-
-window.closeModal =
-    closeModal;
-
-window.approveMember =
-    approveMember;
-
-window.rejectMember =
-    rejectMember;
-
-window.editMember =
-    editMember;
-
-window.deleteMember =
-    deleteMember;
-
-window.logout =
-    logout;
-
-window.searchMember =
-    searchMember;
-
-
-// =======================================================
-// PWA Install Prompt
-// =======================================================
-
-let deferredPrompt;
-
-
-const installBtn =
-    document.getElementById(
-        "installBtn"
-    );
-
+/* =========================================================
+   PWA INSTALL
+   ========================================================= */
 
 window.addEventListener(
     "beforeinstallprompt",
@@ -1391,71 +1299,93 @@ window.addEventListener(
 
         event.preventDefault();
 
-        deferredPrompt =
-            event;
+        deferredPrompt = event;
 
+        const installBtn =
+            document.getElementById(
+                "installBtn"
+            );
 
         if (installBtn) {
-
-            installBtn.hidden =
-                false;
-
+            installBtn.hidden = false;
         }
-
     }
 );
 
+const installBtn =
+    document.getElementById(
+        "installBtn"
+    );
 
-installBtn?.addEventListener(
-    "click",
-    async () => {
+if (installBtn) {
 
-        if (!deferredPrompt) {
+    installBtn.addEventListener(
+        "click",
+        async () => {
 
-            return;
+            if (!deferredPrompt) {
 
+                showAlert(
+                    "এই মুহূর্তে Install option পাওয়া যাচ্ছে না।"
+                );
+
+                return;
+            }
+
+            deferredPrompt.prompt();
+
+            const choice =
+                await deferredPrompt.userChoice;
+
+            console.log(
+                "Install:",
+                choice.outcome
+            );
+
+            deferredPrompt = null;
+
+            installBtn.hidden = true;
         }
-
-
-        installBtn.hidden =
-            true;
-
-
-        deferredPrompt.prompt();
-
-
-        const { outcome } =
-            await deferredPrompt.userChoice;
-
-
-        console.log(
-            "Install:",
-            outcome
-        );
-
-
-        deferredPrompt =
-            null;
-
-    }
-);
-
+    );
+}
 
 window.addEventListener(
     "appinstalled",
     () => {
 
-        console.log(
-            "✅ App Installed"
-        );
-
+        const installBtn =
+            document.getElementById(
+                "installBtn"
+            );
 
         if (installBtn) {
-
-            installBtn.hidden =
-                true;
-
+            installBtn.hidden = true;
         }
-
     }
 );
+
+/* =========================================================
+   ADMIN PAGE BUTTON COMPATIBILITY
+   ========================================================= */
+
+/*
+   admin.html-এর পুরোনো inline onclick
+   থাকলেও যেন কাজ করে।
+*/
+
+window.viewMember = viewMember;
+window.closeModal = closeModal;
+window.approveMember = approveMember;
+window.rejectMember = rejectMember;
+window.editMember = editMember;
+window.deleteMember = deleteMember;
+window.logout = logout;
+window.searchMember = searchMember;
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+if (table) {
+    loadMembers();
+}
