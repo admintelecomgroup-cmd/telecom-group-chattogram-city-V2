@@ -1,17 +1,20 @@
 // =======================================================
 // Telecom Group Chattogram City
 // script.js
-// Supabase + Admin Dashboard + PWA
+// Complete Supabase + Admin Dashboard + PWA
 // =======================================================
 
 import { supabase } from "./supabase.js";
+
+"use strict";
 
 // =======================================================
 // DOM
 // =======================================================
 
 const form = document.getElementById("memberForm");
-const table = document.querySelector("table");
+const table = document.getElementById("memberTable");
+const tableBody = document.getElementById("memberTableBody");
 const installBtn = document.getElementById("installBtn");
 
 // =======================================================
@@ -30,22 +33,20 @@ function startLoading() {
 
     const btn = document.getElementById("submitBtn");
 
-    if (!btn) return;
-
-    btn.disabled = true;
-    btn.textContent = "⏳ অপেক্ষা করুন...";
-
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = "⏳ অপেক্ষা করুন...";
+    }
 }
 
 function stopLoading() {
 
     const btn = document.getElementById("submitBtn");
 
-    if (!btn) return;
-
-    btn.disabled = false;
-    btn.textContent = "আবেদন জমা দিন";
-
+    if (btn) {
+        btn.disabled = false;
+        btn.textContent = "আবেদন জমা দিন";
+    }
 }
 
 // =======================================================
@@ -58,29 +59,33 @@ async function uploadFile(file, bucket) {
         return "";
     }
 
-    const safeName =
-        file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
 
     const fileName =
-        Date.now() + "_" + safeName;
+        Date.now() +
+        "_" +
+        Math.random().toString(36).substring(2, 8) +
+        "_" +
+        safeName;
 
     const { error } = await supabase.storage
         .from(bucket)
         .upload(fileName, file, {
+            cacheControl: "3600",
             upsert: false
         });
 
     if (error) {
-        throw error;
+        throw new Error(
+            "File Upload Error (" + bucket + "): " + error.message
+        );
     }
 
-    const { data } =
-        supabase.storage
-            .from(bucket)
-            .getPublicUrl(fileName);
+    const { data } = supabase.storage
+        .from(bucket)
+        .getPublicUrl(fileName);
 
     return data.publicUrl || "";
-
 }
 
 // =======================================================
@@ -89,19 +94,17 @@ async function uploadFile(file, bucket) {
 
 async function mobileExists(mobile) {
 
-    const { data, error } =
-        await supabase
-            .from("members")
-            .select("id")
-            .eq("mobile", mobile)
-            .limit(1);
+    const { data, error } = await supabase
+        .from("members")
+        .select("id")
+        .eq("mobile", mobile)
+        .limit(1);
 
     if (error) {
         throw error;
     }
 
-    return data && data.length > 0;
-
+    return Array.isArray(data) && data.length > 0;
 }
 
 // =======================================================
@@ -110,19 +113,17 @@ async function mobileExists(mobile) {
 
 async function nidExists(nid) {
 
-    const { data, error } =
-        await supabase
-            .from("members")
-            .select("id")
-            .eq("nid", nid)
-            .limit(1);
+    const { data, error } = await supabase
+        .from("members")
+        .select("id")
+        .eq("nid", nid)
+        .limit(1);
 
     if (error) {
         throw error;
     }
 
-    return data && data.length > 0;
-
+    return Array.isArray(data) && data.length > 0;
 }
 
 // =======================================================
@@ -148,7 +149,7 @@ async function registerMember() {
             document.getElementById("email")?.value.trim() || "";
 
         const dob =
-            document.getElementById("dob")?.value || "";
+            document.getElementById("dob")?.value || null;
 
         const shop =
             document.getElementById("shop")?.value.trim() || "";
@@ -180,6 +181,7 @@ async function registerMember() {
         const nidImage =
             document.getElementById("nidImage")?.files?.[0];
 
+
         // =================================================
         // Validation
         // =================================================
@@ -189,7 +191,7 @@ async function registerMember() {
             return;
         }
 
-        if (!/^01[0-9]{9}$/.test(mobile)) {
+        if (!/^\d{11}$/.test(mobile)) {
             showAlert("সঠিক ১১ সংখ্যার মোবাইল নম্বর লিখুন");
             return;
         }
@@ -204,8 +206,23 @@ async function registerMember() {
             return;
         }
 
-        if (!/^[0-9]{17}$/.test(nid)) {
+        if (!/^\d{17}$/.test(nid)) {
             showAlert("১৭ সংখ্যার NID লিখুন");
+            return;
+        }
+
+        if (!photo) {
+            showAlert("সদস্যের ছবি নির্বাচন করুন");
+            return;
+        }
+
+        if (!shopImage) {
+            showAlert("দোকানের ছবি নির্বাচন করুন");
+            return;
+        }
+
+        if (!tradeLicense) {
+            showAlert("ট্রেড লাইসেন্স নির্বাচন করুন");
             return;
         }
 
@@ -213,6 +230,7 @@ async function registerMember() {
             showAlert("ঘোষণাপত্রে টিক দিন");
             return;
         }
+
 
         // =================================================
         // Duplicate Check
@@ -236,21 +254,16 @@ async function registerMember() {
             return;
         }
 
+
         // =================================================
-        // Upload
+        // Upload Files
         // =================================================
 
         const photoURL =
-            await uploadFile(
-                photo,
-                "member-photo"
-            );
+            await uploadFile(photo, "member-photo");
 
         const shopImageURL =
-            await uploadFile(
-                shopImage,
-                "shop-photo"
-            );
+            await uploadFile(shopImage, "shop-photo");
 
         const tradeLicenseURL =
             await uploadFile(
@@ -264,78 +277,94 @@ async function registerMember() {
                 "nid-photo"
             );
 
+
         // =================================================
         // Member ID
         // =================================================
 
         const memberId =
-            "TG-" + Date.now();
+            "TG-" +
+            Date.now();
+
 
         // =================================================
         // Database Insert
         // =================================================
 
-        const { error } =
-            await supabase
-                .from("members")
-                .insert([{
+        const { data, error } = await supabase
+            .from("members")
+            .insert([{
 
-                    memberid: memberId,
+                memberid: memberId,
 
-                    name: name,
+                name: name,
 
-                    mobile: mobile,
+                mobile: mobile,
 
-                    whatsapp: whatsapp,
+                whatsapp: whatsapp,
 
-                    email: email,
+                email: email,
 
-                    dob: dob || null,
+                dob: dob,
 
-                    shop: shop,
+                shop: shop,
 
-                    address: address,
+                address: address,
 
-                    map: map,
+                map: map,
 
-                    business: business,
+                business: business,
 
-                    nid: nid,
+                nid: nid,
 
-                    photo: photoURL,
+                photo: photoURL,
 
-                    shopimage: shopImageURL,
+                shopimage: shopImageURL,
 
-                    tradelicense: tradeLicenseURL,
+                tradelicense: tradeLicenseURL,
 
-                    nidimage: nidImageURL,
+                nidimage: nidImageURL,
 
-                    status: "Pending"
+                status: "Pending"
 
-                }]);
+            }])
+            .select()
+            .single();
+
 
         if (error) {
             throw error;
         }
 
-        showAlert(
-            "✅ আবেদন সফলভাবে জমা হয়েছে"
+
+        console.log(
+            "Member Saved:",
+            data
         );
 
+
+        showAlert(
+            "✅ আবেদন সফলভাবে জমা হয়েছে\n\nMember ID: " +
+            memberId
+        );
+
+
+        // Reset
         if (form) {
             form.reset();
         }
 
+
     } catch (error) {
 
         console.error(
-            "Registration Error:",
+            "Register Error:",
             error
         );
 
         showAlert(
-            "❌ সমস্যা হয়েছে\n\n" +
-            (error?.message || "Unknown error")
+            "❌ আবেদন জমা হয়নি\n\n" +
+            (error.message || error)
         );
 
     } finally {
@@ -343,8 +372,8 @@ async function registerMember() {
         stopLoading();
 
     }
-
 }
+
 
 // =======================================================
 // Registration Submit
@@ -365,214 +394,144 @@ if (form) {
 
 }
 
-// =======================================================
-// Admin Session Check
-// =======================================================
-
-async function checkAdminLogin() {
-
-    if (!table) {
-        return;
-    }
-
-    try {
-
-        const { data, error } =
-            await supabase.auth.getSession();
-
-        if (error) {
-            throw error;
-        }
-
-        if (!data?.session) {
-
-            window.location.replace(
-                "./login.html"
-            );
-
-            return false;
-        }
-
-        return true;
-
-    } catch (error) {
-
-        console.error(
-            "Admin Session Error:",
-            error
-        );
-
-        window.location.replace(
-            "./login.html"
-        );
-
-        return false;
-
-    }
-
-}
 
 // =======================================================
-// Load Members
+// Admin Dashboard
 // =======================================================
 
 async function loadMembers() {
 
-    if (!table) {
-        return;
-    }
-
-    const loggedIn =
-        await checkAdminLogin();
-
-    if (!loggedIn) {
+    if (!tableBody) {
         return;
     }
 
     try {
 
-        table.innerHTML = `
-            <thead>
-                <tr>
-                    <th>Member ID</th>
-                    <th>নাম</th>
-                    <th>মোবাইল</th>
-                    <th>ব্যবসা</th>
-                    <th>স্ট্যাটাস</th>
-                    <th>অ্যাকশন</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align:center;">
+                    ⏳ সদস্য তথ্য লোড হচ্ছে...
+                </td>
+            </tr>
         `;
 
-        const tbody =
-            table.querySelector("tbody");
 
-        const { data: members, error } =
-            await supabase
-                .from("members")
-                .select("*")
-                .order("id", {
-                    ascending: false
-                });
+        const {
+            data: members,
+            error
+        } = await supabase
+            .from("members")
+            .select("*")
+            .order("id", {
+                ascending: false
+            });
+
 
         if (error) {
             throw error;
         }
 
-        let total = 0;
-        let pending = 0;
-        let approved = 0;
-        let rejected = 0;
 
         if (!members || members.length === 0) {
 
-            tbody.innerHTML = `
+            tableBody.innerHTML = `
                 <tr>
-                    <td colspan="6">
-                        কোনো সদস্য পাওয়া যায়নি
+                    <td colspan="6" style="text-align:center;">
+                        📭 এখনো কোনো সদস্য নেই
                     </td>
                 </tr>
             `;
 
-        } else {
+            updateStats([]);
 
-            members.forEach(
-                (member) => {
-
-                    total++;
-
-                    if (
-                        member.status === "Pending"
-                    ) {
-                        pending++;
-                    }
-
-                    if (
-                        member.status === "Approved"
-                    ) {
-                        approved++;
-                    }
-
-                    if (
-                        member.status === "Rejected"
-                    ) {
-                        rejected++;
-                    }
-
-                    tbody.innerHTML += `
-
-                        <tr>
-
-                            <td>
-                                ${member.memberid || "-"}
-                            </td>
-
-                            <td>
-                                ${member.name || "-"}
-                            </td>
-
-                            <td>
-                                ${member.mobile || "-"}
-                            </td>
-
-                            <td>
-                                ${member.business || "-"}
-                            </td>
-
-                            <td>
-                                ${member.status || "-"}
-                            </td>
-
-                            <td>
-
-                                <button
-                                    type="button"
-                                    onclick="viewMember(${member.id})">
-                                    👁️
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onclick="approveMember(${member.id})">
-                                    ✅
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onclick="rejectMember(${member.id})">
-                                    ❌
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onclick="editMember(${member.id})">
-                                    ✏️
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onclick="deleteMember(${member.id})">
-                                    🗑️
-                                </button>
-
-                            </td>
-
-                        </tr>
-
-                    `;
-
-                }
-            );
-
+            return;
         }
 
-        updateStatistics(
-            total,
-            pending,
-            approved,
-            rejected
-        );
+
+        tableBody.innerHTML = "";
+
+
+        members.forEach(function (member) {
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${escapeHTML(member.memberid || "-")}
+                </td>
+
+                <td>
+                    ${escapeHTML(member.name || "-")}
+                </td>
+
+                <td>
+                    ${escapeHTML(member.mobile || "-")}
+                </td>
+
+                <td>
+                    ${escapeHTML(member.business || "-")}
+                </td>
+
+                <td>
+                    ${escapeHTML(member.status || "Pending")}
+                </td>
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="action-btn"
+                        data-action="view"
+                        data-id="${member.id}">
+                        👁️
+                    </button>
+
+                    <button
+                        type="button"
+                        class="action-btn"
+                        data-action="approve"
+                        data-id="${member.id}">
+                        ✅
+                    </button>
+
+                    <button
+                        type="button"
+                        class="action-btn"
+                        data-action="reject"
+                        data-id="${member.id}">
+                        ❌
+                    </button>
+
+                    <button
+                        type="button"
+                        class="action-btn"
+                        data-action="edit"
+                        data-id="${member.id}">
+                        ✏️
+                    </button>
+
+                    <button
+                        type="button"
+                        class="action-btn"
+                        data-action="delete"
+                        data-id="${member.id}">
+                        🗑️
+                    </button>
+
+                </td>
+            `;
+
+
+            tableBody.appendChild(row);
+
+        });
+
+
+        updateStats(members);
+
 
     } catch (error) {
 
@@ -581,83 +540,64 @@ async function loadMembers() {
             error
         );
 
-        showAlert(
-            "❌ সদস্য তালিকা লোড হয়নি\n\n" +
-            error.message
-        );
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align:center;color:red;">
+                    ❌ সদস্য লোড করা যায়নি
+                    <br>
+                    ${escapeHTML(error.message || "")}
+                </td>
+            </tr>
+        `;
 
     }
 
 }
 
+
 // =======================================================
-// Update Statistics
+// Statistics
 // =======================================================
 
-function updateStatistics(
-    total,
-    pending,
-    approved,
-    rejected
-) {
+function updateStats(members) {
 
-    const statCards =
-        document.querySelectorAll(
-            ".stat-card"
-        );
+    const total =
+        members.length;
 
-    if (statCards.length >= 4) {
+    const pending =
+        members.filter(
+            m => m.status === "Pending"
+        ).length;
 
-        const totalElement =
-            statCards[0].querySelector("b");
+    const approved =
+        members.filter(
+            m => m.status === "Approved"
+        ).length;
 
-        const pendingElement =
-            statCards[1].querySelector("b");
+    const rejected =
+        members.filter(
+            m => m.status === "Rejected"
+        ).length;
 
-        const approvedElement =
-            statCards[2].querySelector("b");
-
-        const rejectedElement =
-            statCards[3].querySelector("b");
-
-        if (totalElement) {
-            totalElement.textContent =
-                total;
-        }
-
-        if (pendingElement) {
-            pendingElement.textContent =
-                pending;
-        }
-
-        if (approvedElement) {
-            approvedElement.textContent =
-                approved;
-        }
-
-        if (rejectedElement) {
-            rejectedElement.textContent =
-                rejected;
-        }
-
-        return;
-    }
-
-    // Fallback
 
     const stats =
-        document.querySelectorAll("b");
+        document.querySelectorAll(".stat-card p b");
+
 
     if (stats.length >= 4) {
 
         stats[0].textContent = total;
+
         stats[1].textContent = pending;
+
         stats[2].textContent = approved;
+
         stats[3].textContent = rejected;
 
     }
 
 }
+
 
 // =======================================================
 // View Member
@@ -667,16 +607,20 @@ async function viewMember(id) {
 
     try {
 
-        const { data, error } =
-            await supabase
-                .from("members")
-                .select("*")
-                .eq("id", id)
-                .single();
+        const {
+            data,
+            error
+        } = await supabase
+            .from("members")
+            .select("*")
+            .eq("id", id)
+            .single();
+
 
         if (error) {
             throw error;
         }
+
 
         const details =
             document.getElementById(
@@ -688,147 +632,162 @@ async function viewMember(id) {
                 "memberModal"
             );
 
+
         if (!details || !modal) {
             return;
         }
+
 
         details.innerHTML = `
 
             <p>
                 <b>Member ID:</b>
-                ${data.memberid || "-"}
+                ${escapeHTML(data.memberid || "-")}
             </p>
 
             <p>
                 <b>নাম:</b>
-                ${data.name || "-"}
+                ${escapeHTML(data.name || "-")}
             </p>
 
             <p>
                 <b>মোবাইল:</b>
-                ${data.mobile || "-"}
+                ${escapeHTML(data.mobile || "-")}
             </p>
 
             <p>
                 <b>WhatsApp:</b>
-                ${data.whatsapp || "-"}
+                ${escapeHTML(data.whatsapp || "-")}
             </p>
 
             <p>
                 <b>Email:</b>
-                ${data.email || "-"}
+                ${escapeHTML(data.email || "-")}
             </p>
 
             <p>
                 <b>জন্ম তারিখ:</b>
-                ${data.dob || "-"}
+                ${escapeHTML(data.dob || "-")}
             </p>
 
             <p>
                 <b>দোকানের নাম:</b>
-                ${data.shop || "-"}
+                ${escapeHTML(data.shop || "-")}
             </p>
 
             <p>
                 <b>ঠিকানা:</b>
-                ${data.address || "-"}
+                ${escapeHTML(data.address || "-")}
             </p>
 
             <p>
                 <b>Google Maps:</b>
                 ${
                     data.map
-                    ? `<a href="${data.map}" target="_blank">
-                        📍 Map খুলুন
-                       </a>`
-                    : "-"
+                    ?
+                    `<a href="${escapeAttribute(data.map)}"
+                        target="_blank"
+                        rel="noopener">
+                        🗺️ Map
+                    </a>`
+                    :
+                    "-"
                 }
             </p>
 
             <p>
                 <b>ব্যবসা:</b>
-                ${data.business || "-"}
+                ${escapeHTML(data.business || "-")}
             </p>
 
             <p>
                 <b>NID:</b>
-                ${data.nid || "-"}
+                ${escapeHTML(data.nid || "-")}
             </p>
 
             <p>
                 <b>স্ট্যাটাস:</b>
-                ${data.status || "-"}
+                ${escapeHTML(data.status || "-")}
             </p>
+
+            <hr>
 
             ${
                 data.photo
-                ? `
-                    <p><b>সদস্যের ছবি:</b></p>
+                ?
+                `<p>
+                    <b>সদস্যের ছবি</b><br>
                     <img
-                        src="${data.photo}"
+                        src="${escapeAttribute(data.photo)}"
                         width="150"
                         alt="Member Photo">
-                  `
-                : ""
+                </p>`
+                :
+                ""
             }
 
             ${
                 data.shopimage
-                ? `
-                    <p><b>দোকানের ছবি:</b></p>
+                ?
+                `<p>
+                    <b>দোকানের ছবি</b><br>
                     <img
-                        src="${data.shopimage}"
+                        src="${escapeAttribute(data.shopimage)}"
                         width="150"
                         alt="Shop Photo">
-                  `
-                : ""
+                </p>`
+                :
+                ""
             }
 
             ${
                 data.nidimage
-                ? `
-                    <p><b>NID ছবি:</b></p>
+                ?
+                `<p>
+                    <b>NID ছবি</b><br>
                     <img
-                        src="${data.nidimage}"
+                        src="${escapeAttribute(data.nidimage)}"
                         width="150"
                         alt="NID">
-                  `
-                : ""
+                </p>`
+                :
+                ""
             }
 
             ${
                 data.tradelicense
-                ? `
-                    <p>
-                        <a
-                            href="${data.tradelicense}"
-                            target="_blank">
-                            📄 Trade License দেখুন
-                        </a>
-                    </p>
-                  `
-                : ""
+                ?
+                `<p>
+                    <a
+                        href="${escapeAttribute(data.tradelicense)}"
+                        target="_blank"
+                        rel="noopener">
+                        📄 Trade License দেখুন
+                    </a>
+                </p>`
+                :
+                ""
             }
 
         `;
 
+
         modal.style.display = "block";
+
 
     } catch (error) {
 
-        console.error(
-            "View Member Error:",
-            error
-        );
+        console.error(error);
 
         showAlert(
-            "❌ তথ্য দেখা যায়নি\n\n" +
+            "❌ সদস্যের তথ্য পাওয়া যায়নি\n\n" +
             error.message
         );
 
     }
 
 }
+
 
 // =======================================================
 // Close Modal
@@ -847,43 +806,39 @@ function closeModal() {
 
 }
 
+
 // =======================================================
 // Approve Member
 // =======================================================
 
 async function approveMember(id) {
 
-    if (
-        !confirm(
-            "এই সদস্যকে Approved করতে চান?"
-        )
-    ) {
-        return;
-    }
-
     try {
 
-        const { error } =
-            await supabase
-                .from("members")
-                .update({
-                    status: "Approved"
-                })
-                .eq("id", id);
+        const {
+            error
+        } = await supabase
+            .from("members")
+            .update({
+                status: "Approved"
+            })
+            .eq("id", id);
+
 
         if (error) {
             throw error;
         }
 
+
         showAlert(
-            "✅ Member Approved"
+            "✅ সদস্য Approved হয়েছে"
         );
+
 
         await loadMembers();
 
-    } catch (error) {
 
-        console.error(error);
+    } catch (error) {
 
         showAlert(
             "❌ Approve করা যায়নি\n\n" +
@@ -894,28 +849,517 @@ async function approveMember(id) {
 
 }
 
+
 // =======================================================
 // Reject Member
 // =======================================================
 
 async function rejectMember(id) {
 
-    if (
-        !confirm(
-            "এই সদস্যকে Rejected করতে চান?"
-        )
-    ) {
-        return;
+    try {
+
+        const {
+            error
+        } = await supabase
+            .from("members")
+            .update({
+                status: "Rejected"
+            })
+            .eq("id", id);
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        showAlert(
+            "✅ সদস্য Rejected হয়েছে"
+        );
+
+
+        await loadMembers();
+
+
+    } catch (error) {
+
+        showAlert(
+            "❌ Reject করা যায়নি\n\n" +
+            error.message
+        );
+
     }
+
+}
+
+
+// =======================================================
+// Edit Member
+// =======================================================
+
+async function editMember(id) {
 
     try {
 
-        const { error } =
-            await supabase
-                .from("members")
-                .update({
-                    status: "Rejected"
-                })
-                .eq("id", id);
+        const {
+            data,
+            error
+        } = await supabase
+            .from("members")
+            .select("*")
+            .eq("id", id)
+            .single();
+
 
         if (error) {
+            throw error;
+        }
+
+
+        const name =
+            prompt(
+                "নাম",
+                data.name || ""
+            );
+
+        if (name === null) {
+            return;
+        }
+
+
+        const mobile =
+            prompt(
+                "মোবাইল",
+                data.mobile || ""
+            );
+
+        if (mobile === null) {
+            return;
+        }
+
+
+        const shop =
+            prompt(
+                "দোকানের নাম",
+                data.shop || ""
+            );
+
+        if (shop === null) {
+            return;
+        }
+
+
+        const address =
+            prompt(
+                "ঠিকানা",
+                data.address || ""
+            );
+
+        if (address === null) {
+            return;
+        }
+
+
+        const {
+            error: updateError
+        } = await supabase
+            .from("members")
+            .update({
+
+                name:
+                    name.trim(),
+
+                mobile:
+                    mobile.trim(),
+
+                shop:
+                    shop.trim(),
+
+                address:
+                    address.trim()
+
+            })
+            .eq("id", id);
+
+
+        if (updateError) {
+            throw updateError;
+        }
+
+
+        showAlert(
+            "✅ তথ্য আপডেট হয়েছে"
+        );
+
+
+        await loadMembers();
+
+
+    } catch (error) {
+
+        showAlert(
+            "❌ Edit করা যায়নি\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+// =======================================================
+// Delete Member
+// =======================================================
+
+async function deleteMember(id) {
+
+    const confirmDelete =
+        confirm(
+            "আপনি কি এই সদস্যটি Delete করতে চান?"
+        );
+
+
+    if (!confirmDelete) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            error
+        } = await supabase
+            .from("members")
+            .delete()
+            .eq("id", id);
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        showAlert(
+            "✅ Member Deleted"
+        );
+
+
+        await loadMembers();
+
+
+    } catch (error) {
+
+        showAlert(
+            "❌ Delete করা যায়নি\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+// =======================================================
+// Action Button Handler
+// =======================================================
+
+if (tableBody) {
+
+    tableBody.addEventListener(
+        "click",
+        function (event) {
+
+            const button =
+                event.target.closest(
+                    "[data-action]"
+                );
+
+
+            if (!button) {
+                return;
+            }
+
+
+            const action =
+                button.dataset.action;
+
+            const id =
+                button.dataset.id;
+
+
+            if (!id) {
+                return;
+            }
+
+
+            if (action === "view") {
+                viewMember(id);
+            }
+
+            else if (action === "approve") {
+                approveMember(id);
+            }
+
+            else if (action === "reject") {
+                rejectMember(id);
+            }
+
+            else if (action === "edit") {
+                editMember(id);
+            }
+
+            else if (action === "delete") {
+                deleteMember(id);
+            }
+
+        }
+    );
+
+}
+
+
+// =======================================================
+// Search
+// =======================================================
+
+function searchMember() {
+
+    const input =
+        document.getElementById(
+            "search"
+        );
+
+
+    if (!input || !tableBody) {
+        return;
+    }
+
+
+    const filter =
+        input.value
+            .trim()
+            .toLowerCase();
+
+
+    const rows =
+        tableBody.querySelectorAll("tr");
+
+
+    rows.forEach(function (row) {
+
+        row.style.display =
+            row.innerText
+                .toLowerCase()
+                .includes(filter)
+                ? ""
+                : "none";
+
+    });
+
+}
+
+
+// =======================================================
+// Logout
+// =======================================================
+
+async function logout() {
+
+    try {
+
+        const {
+            error
+        } = await supabase.auth.signOut();
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        localStorage.removeItem("admin");
+
+
+        window.location.replace(
+            "./login.html"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Logout Error:",
+            error
+        );
+
+
+        showAlert(
+            "❌ Logout করা যায়নি\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+// =======================================================
+// Modal Outside Click
+// =======================================================
+
+window.addEventListener(
+    "click",
+    function (event) {
+
+        const modal =
+            document.getElementById(
+                "memberModal"
+            );
+
+
+        if (
+            modal &&
+            event.target === modal
+        ) {
+
+            closeModal();
+
+        }
+
+    }
+);
+
+
+// =======================================================
+// Escape HTML
+// =======================================================
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHTML(value);
+
+}
+
+
+// =======================================================
+// PWA Install
+// =======================================================
+
+let deferredPrompt = null;
+
+
+window.addEventListener(
+    "beforeinstallprompt",
+    function (event) {
+
+        event.preventDefault();
+
+        deferredPrompt = event;
+
+
+        if (installBtn) {
+
+            installBtn.hidden = false;
+
+        }
+
+    }
+);
+
+
+if (installBtn) {
+
+    installBtn.addEventListener(
+        "click",
+        async function () {
+
+            if (!deferredPrompt) {
+
+                showAlert(
+                    "📲 এই মুহূর্তে Install option পাওয়া যাচ্ছে না।\n\nChrome Browser-এর menu থেকে 'Install app' দেখুন।"
+                );
+
+                return;
+
+            }
+
+
+            deferredPrompt.prompt();
+
+
+            const result =
+                await deferredPrompt.userChoice;
+
+
+            console.log(
+                "PWA Install:",
+                result.outcome
+            );
+
+
+            deferredPrompt = null;
+
+            installBtn.hidden = true;
+
+        }
+    );
+
+}
+
+
+window.addEventListener(
+    "appinstalled",
+    function () {
+
+        console.log(
+            "✅ PWA Installed"
+        );
+
+
+        deferredPrompt = null;
+
+
+        if (installBtn) {
+            installBtn.hidden = true;
+        }
+
+    }
+);
+
+
+// =======================================================
+// Global Functions
+// =======================================================
+// এগুলো রাখা হয়েছে যাতে HTML-এর onclick থাকলেও কাজ করে।
+
+window.viewMember = viewMember;
+window.closeModal = closeModal;
+window.approveMember = approveMember;
+window.rejectMember = rejectMember;
+window.editMember = editMember;
+window.deleteMember = deleteMember;
+window.logout = logout;
+window.searchMember = searchMember;
+
+
+// =======================================================
+// Initialize Dashboard
+// =======================================================
+
+if (tableBody) {
+
+    loadMembers();
+
+}
