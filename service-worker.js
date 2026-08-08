@@ -1,61 +1,34 @@
-"use strict";
-
-// =======================================================
-// Telecom Group Chattogram City
-// service-worker.js
-// =======================================================
-
 const CACHE_NAME = "telecom-group-v5";
 
 const FILES_TO_CACHE = [
     "./",
     "./index.html",
+    "./admin.html",
+    "./login.html",
     "./style.css",
     "./script.js",
     "./supabase.js",
-    "./manifest.json",
-
-    // PWA Icons
-    "./icons/icon-192.png",
-    "./icons/icon-512.png"
+    "./manifest.json"
 ];
-
-// =======================================================
-// Install
-// =======================================================
 
 self.addEventListener("install", event => {
 
     event.waitUntil(
 
         caches.open(CACHE_NAME)
-
-            .then(cache => {
-
-                return cache.addAll(FILES_TO_CACHE);
-
-            })
-
-            .then(() => {
-
-                return self.skipWaiting();
-
-            })
+            .then(cache => cache.addAll(FILES_TO_CACHE))
+            .then(() => self.skipWaiting())
 
     );
 
 });
 
-// =======================================================
-// Activate
-// =======================================================
 
 self.addEventListener("activate", event => {
 
     event.waitUntil(
 
         caches.keys()
-
             .then(keys => {
 
                 return Promise.all(
@@ -68,43 +41,26 @@ self.addEventListener("activate", event => {
 
                         }
 
-                        return null;
-
                     })
 
                 );
 
             })
-
-            .then(() => {
-
-                return self.clients.claim();
-
-            })
+            .then(() => self.clients.claim())
 
     );
 
 });
 
-// =======================================================
-// Fetch
-// =======================================================
 
 self.addEventListener("fetch", event => {
 
     event.respondWith(
 
         caches.match(event.request)
-
             .then(response => {
 
-                if (response) {
-
-                    return response;
-
-                }
-
-                return fetch(event.request);
+                return response || fetch(event.request);
 
             })
 
