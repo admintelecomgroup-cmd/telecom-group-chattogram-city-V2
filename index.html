@@ -12,7 +12,7 @@
     <title>Telecom Group Chattogram City</title>
 
     <!-- =========================
-         PWA Meta
+         PWA
     ========================== -->
 
     <meta
@@ -36,18 +36,10 @@
         content="Telecom Group">
 
 
-    <!-- =========================
-         PWA Manifest
-    ========================== -->
-
     <link
         rel="manifest"
         href="./manifest.json">
 
-
-    <!-- =========================
-         Icons
-    ========================== -->
 
     <link
         rel="icon"
@@ -55,14 +47,11 @@
         sizes="192x192"
         href="./icons/icon-192.png">
 
+
     <link
         rel="apple-touch-icon"
         href="./icons/icon-192.png">
 
-
-    <!-- =========================
-         CSS
-    ========================== -->
 
     <link
         rel="stylesheet"
@@ -74,545 +63,674 @@
 <body>
 
 
-<!-- =====================================================
-     Header
-===================================================== -->
+    <!-- =========================
+         Header
+    ========================== -->
 
-<header class="header">
+    <header class="header">
 
-    <h1>📱 টেলিকম গ্রুপ</h1>
+        <h1>📱 টেলিকম গ্রুপ</h1>
 
-    <h2>চট্টগ্রাম সিটি</h2>
+        <h2>চট্টগ্রাম সিটি</h2>
 
-    <p>সদস্য নিবন্ধন ফর্ম</p>
+        <p>সদস্য নিবন্ধন ফর্ম</p>
 
-</header>
+    </header>
 
 
-<!-- =====================================================
-     PWA Install Button
-===================================================== -->
+    <!-- =========================
+         Install App
+    ========================== -->
 
-<div class="install-box">
-
-    <button
-        type="button"
-        id="installBtn"
-        hidden>
-
-        📲 Install App
-
-    </button>
-
-</div>
-
-
-<!-- =====================================================
-     Member Registration Form
-===================================================== -->
-
-<form
-    id="memberForm"
-    class="container"
-    autocomplete="off">
-
-
-    <!-- =================================================
-         Personal Information
-    ================================================== -->
-
-    <div class="card">
-
-        <h3>👤 ব্যক্তিগত তথ্য</h3>
-
-
-        <label for="name">
-            পূর্ণ নাম
-        </label>
-
-        <input
-            type="text"
-            id="name"
-            name="name"
-            placeholder="পূর্ণ নাম লিখুন"
-            required>
-
-
-        <label for="mobile">
-            মোবাইল নম্বর
-        </label>
-
-        <input
-            type="tel"
-            id="mobile"
-            name="mobile"
-            maxlength="11"
-            minlength="11"
-            inputmode="numeric"
-            pattern="[0-9]{11}"
-            placeholder="01XXXXXXXXX"
-            required>
-
-
-        <label for="whatsapp">
-            WhatsApp নম্বর
-        </label>
-
-        <input
-            type="tel"
-            id="whatsapp"
-            name="whatsapp"
-            maxlength="11"
-            minlength="11"
-            inputmode="numeric"
-            pattern="[0-9]{11}"
-            placeholder="01XXXXXXXXX">
-
-
-        <label for="email">
-            ই-মেইল
-        </label>
-
-        <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="example@email.com">
-
-
-        <label for="dob">
-            জন্ম তারিখ
-        </label>
-
-        <input
-            type="date"
-            id="dob"
-            name="dob">
-
-    </div>
-
-
-    <!-- =================================================
-         Business Information
-    ================================================== -->
-
-    <div class="card">
-
-        <h3>🏪 ব্যবসায়িক তথ্য</h3>
-
-
-        <label for="shop">
-            দোকানের নাম
-        </label>
-
-        <input
-            type="text"
-            id="shop"
-            name="shop"
-            placeholder="দোকানের নাম"
-            required>
-
-
-        <label for="address">
-            দোকানের ঠিকানা
-        </label>
-
-        <input
-            type="text"
-            id="address"
-            name="address"
-            placeholder="সম্পূর্ণ ঠিকানা">
-
-
-        <label for="map">
-            Google Maps Link
-        </label>
-
-        <input
-            type="url"
-            id="map"
-            name="map"
-            placeholder="https://maps.google.com/...">
-
-
-        <label for="business">
-            ব্যবসার ধরন
-        </label>
-
-        <select
-            id="business"
-            name="business"
-            required>
-
-            <option value="">
-                -- ব্যবসার ধরন নির্বাচন করুন --
-            </option>
-
-
-            <optgroup label="📱 টেলিকম ও মোবাইল">
-
-                <option>মোবাইল শপ</option>
-
-                <option>মোবাইল সার্ভিসিং</option>
-
-                <option>রিচার্জ পয়েন্ট</option>
-
-                <option>সিম বিক্রয় কেন্দ্র</option>
-
-                <option>বিকাশ এজেন্ট</option>
-
-                <option>নগদ এজেন্ট</option>
-
-                <option>রকেট এজেন্ট</option>
-
-                <option>উপায় এজেন্ট</option>
-
-            </optgroup>
-
-
-            <optgroup label="🛒 খুচরা ব্যবসা">
-
-                <option>মুদি দোকান</option>
-
-                <option>স্টেশনারি দোকান</option>
-
-                <option>কসমেটিক্স দোকান</option>
-
-                <option>ফার্মেসি</option>
-
-                <option>ইলেকট্রনিক্স দোকান</option>
-
-                <option>কম্পিউটার দোকান</option>
-
-                <option>হার্ডওয়্যার দোকান</option>
-
-                <option>ফার্নিচার দোকান</option>
-
-                <option>কাপড়ের দোকান</option>
-
-                <option>জুতার দোকান</option>
-
-                <option>ঘড়ির দোকান</option>
-
-                <option>গিফট শপ</option>
-
-                <option>লাইব্রেরি</option>
-
-                <option>ফটোকপি ও প্রিন্টিং</option>
-
-            </optgroup>
-
-
-            <optgroup label="🍽️ খাদ্য ও রেস্টুরেন্ট">
-
-                <option>চায়ের দোকান</option>
-
-                <option>রেস্টুরেন্ট</option>
-
-                <option>বেকারি</option>
-
-                <option>মিষ্টির দোকান</option>
-
-                <option>ফলের দোকান</option>
-
-                <option>সবজির দোকান</option>
-
-            </optgroup>
-
-
-            <optgroup label="🔧 অন্যান্য">
-
-                <option>অন্যান্য</option>
-
-            </optgroup>
-
-        </select>
-
-    </div>
-
-
-    <!-- =================================================
-         Documents
-    ================================================== -->
-
-    <div class="card">
-
-        <h3>📄 ডকুমেন্ট</h3>
-
-
-        <label for="photo">
-            সদস্যের ছবি
-        </label>
-
-        <input
-            type="file"
-            id="photo"
-            name="photo"
-            accept="image/*"
-            required>
-
-
-        <label for="shopImage">
-            দোকানের ছবি
-        </label>
-
-        <input
-            type="file"
-            id="shopImage"
-            name="shopImage"
-            accept="image/*"
-            required>
-
-
-        <label for="tradeLicense">
-            ট্রেড লাইসেন্স
-        </label>
-
-        <input
-            type="file"
-            id="tradeLicense"
-            name="tradeLicense"
-            accept="image/*,application/pdf"
-            required>
-
-
-        <label for="nid">
-            জাতীয় পরিচয়পত্র (NID) নম্বর
-        </label>
-
-        <input
-            type="text"
-            id="nid"
-            name="nid"
-            maxlength="17"
-            minlength="17"
-            inputmode="numeric"
-            pattern="[0-9]{17}"
-            placeholder="১৭ সংখ্যার NID নম্বর"
-            required>
-
-
-        <label for="nidImage">
-            NID এর ছবি (ঐচ্ছিক)
-        </label>
-
-        <input
-            type="file"
-            id="nidImage"
-            name="nidImage"
-            accept="image/*">
-
-    </div>
-
-
-    <!-- =================================================
-         Declaration
-    ================================================== -->
-
-    <div class="card">
-
-        <h3>✅ ঘোষণাপত্র</h3>
-
-
-        <label class="check">
-
-            <input
-                type="checkbox"
-                id="agree"
-                name="agree"
-                required>
-
-            আমি নিশ্চিত করছি যে উপরের সকল তথ্য সঠিক।
-
-        </label>
-
+    <div class="install-box">
 
         <button
-            type="submit"
-            id="submitBtn">
+            type="button"
+            id="installBtn"
+            hidden>
 
-            আবেদন জমা দিন
+            📲 Install App
 
         </button>
 
     </div>
 
 
-</form>
+    <!-- =========================
+         Member Registration
+    ========================== -->
+
+    <form
+        id="memberForm"
+        class="container"
+        autocomplete="off">
 
 
-<!-- =====================================================
-     Admin Login
-===================================================== -->
+        <!-- =========================
+             Personal Information
+        ========================== -->
 
-<div class="top-menu">
+        <div class="card">
 
-    <a href="./login.html">
-
-        🔐 Admin Login
-
-    </a>
-
-</div>
+            <h3>👤 ব্যক্তিগত তথ্য</h3>
 
 
-<!-- =====================================================
-     JavaScript
-===================================================== -->
+            <label for="name">
+                পূর্ণ নাম
+            </label>
 
-<script
-    type="module"
-    src="./script.js">
-</script>
-
-
-<!-- =====================================================
-     PWA + Service Worker
-===================================================== -->
-
-<script>
-
-let deferredPrompt = null;
-
-const installBtn =
-    document.getElementById("installBtn");
+            <input
+                type="text"
+                id="name"
+                placeholder="পূর্ণ নাম লিখুন"
+                required>
 
 
-/* ==========================================
-   Service Worker Registration
-========================================== */
+            <label for="mobile">
+                মোবাইল নম্বর
+            </label>
 
-if ("serviceWorker" in navigator) {
+            <input
+                type="tel"
+                id="mobile"
+                maxlength="11"
+                inputmode="numeric"
+                pattern="[0-9]{11}"
+                placeholder="01XXXXXXXXX"
+                required>
 
-    window.addEventListener(
-        "load",
-        async () => {
 
-            try {
+            <label for="whatsapp">
+                WhatsApp নম্বর
+            </label>
 
-                const registration =
-                    await navigator.serviceWorker.register(
-                        "./service-worker.js",
-                        {
-                            scope: "./"
-                        }
-                    );
+            <input
+                type="tel"
+                id="whatsapp"
+                maxlength="11"
+                inputmode="numeric"
+                pattern="[0-9]{11}"
+                placeholder="01XXXXXXXXX">
 
-                console.log(
-                    "✅ Service Worker Registered:",
-                    registration.scope
+
+            <label for="email">
+                ই-মেইল
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="example@email.com">
+
+
+            <label for="dob">
+                জন্ম তারিখ
+            </label>
+
+            <input
+                type="date"
+                id="dob">
+
+        </div>
+
+
+        <!-- =========================
+             Business Information
+        ========================== -->
+
+        <div class="card">
+
+            <h3>🏪 ব্যবসায়িক তথ্য</h3>
+
+
+            <label for="shop">
+                দোকানের নাম
+            </label>
+
+            <input
+                type="text"
+                id="shop"
+                placeholder="দোকানের নাম"
+                required>
+
+
+            <label for="address">
+                দোকানের ঠিকানা
+            </label>
+
+            <input
+                type="text"
+                id="address"
+                placeholder="সম্পূর্ণ ঠিকানা">
+
+
+            <label for="map">
+                Google Maps Link
+            </label>
+
+            <input
+                type="url"
+                id="map"
+                placeholder="https://maps.google.com/...">
+
+
+            <!-- =========================
+                 Multi Business Select
+            ========================== -->
+
+            <label for="business">
+
+                ব্যবসার ধরন
+
+                <span
+                    style="
+                        color:#0d47a1;
+                        font-size:13px;
+                        font-weight:bold;
+                    ">
+
+                    (সর্বোচ্চ ১০টি নির্বাচন করুন)
+
+                </span>
+
+            </label>
+
+
+            <select
+                id="business"
+                name="business"
+                multiple
+                size="8"
+                required
+                aria-label="ব্যবসার ধরন">
+
+
+                <optgroup label="📱 টেলিকম ও মোবাইল">
+
+                    <option value="মোবাইল শপ">
+                        মোবাইল শপ
+                    </option>
+
+                    <option value="মোবাইল সার্ভিসিং">
+                        মোবাইল সার্ভিসিং
+                    </option>
+
+                    <option value="রিচার্জ পয়েন্ট">
+                        রিচার্জ পয়েন্ট
+                    </option>
+
+                    <option value="সিম বিক্রয় কেন্দ্র">
+                        সিম বিক্রয় কেন্দ্র
+                    </option>
+
+                    <option value="বিকাশ এজেন্ট">
+                        বিকাশ এজেন্ট
+                    </option>
+
+                    <option value="নগদ এজেন্ট">
+                        নগদ এজেন্ট
+                    </option>
+
+                    <option value="রকেট এজেন্ট">
+                        রকেট এজেন্ট
+                    </option>
+
+                    <option value="উপায় এজেন্ট">
+                        উপায় এজেন্ট
+                    </option>
+
+                </optgroup>
+
+
+                <optgroup label="🛒 খুচরা ব্যবসা">
+
+                    <option value="মুদি দোকান">
+                        মুদি দোকান
+                    </option>
+
+                    <option value="স্টেশনারি দোকান">
+                        স্টেশনারি দোকান
+                    </option>
+
+                    <option value="কসমেটিক্স দোকান">
+                        কসমেটিক্স দোকান
+                    </option>
+
+                    <option value="ফার্মেসি">
+                        ফার্মেসি
+                    </option>
+
+                    <option value="ইলেকট্রনিক্স দোকান">
+                        ইলেকট্রনিক্স দোকান
+                    </option>
+
+                    <option value="কম্পিউটার দোকান">
+                        কম্পিউটার দোকান
+                    </option>
+
+                    <option value="হার্ডওয়্যার দোকান">
+                        হার্ডওয়্যার দোকান
+                    </option>
+
+                    <option value="ফার্নিচার দোকান">
+                        ফার্নিচার দোকান
+                    </option>
+
+                    <option value="কাপড়ের দোকান">
+                        কাপড়ের দোকান
+                    </option>
+
+                    <option value="জুতার দোকান">
+                        জুতার দোকান
+                    </option>
+
+                    <option value="ঘড়ির দোকান">
+                        ঘড়ির দোকান
+                    </option>
+
+                    <option value="গিফট শপ">
+                        গিফট শপ
+                    </option>
+
+                    <option value="লাইব্রেরি">
+                        লাইব্রেরি
+                    </option>
+
+                    <option value="ফটোকপি ও প্রিন্টিং">
+                        ফটোকপি ও প্রিন্টিং
+                    </option>
+
+                </optgroup>
+
+
+                <optgroup label="🍽️ খাদ্য ও রেস্টুরেন্ট">
+
+                    <option value="চায়ের দোকান">
+                        চায়ের দোকান
+                    </option>
+
+                    <option value="রেস্টুরেন্ট">
+                        রেস্টুরেন্ট
+                    </option>
+
+                    <option value="বেকারি">
+                        বেকারি
+                    </option>
+
+                    <option value="মিষ্টির দোকান">
+                        মিষ্টির দোকান
+                    </option>
+
+                    <option value="ফলের দোকান">
+                        ফলের দোকান
+                    </option>
+
+                    <option value="সবজির দোকান">
+                        সবজির দোকান
+                    </option>
+
+                </optgroup>
+
+
+                <optgroup label="🔧 অন্যান্য">
+
+                    <option value="অন্যান্য">
+                        অন্যান্য
+                    </option>
+
+                </optgroup>
+
+            </select>
+
+
+            <p
+                id="businessCount"
+                style="
+                    margin-top:8px;
+                    color:#555;
+                    font-size:13px;
+                    font-weight:bold;
+                ">
+
+                নির্বাচিত: 0 / 10
+
+            </p>
+
+
+            <p
+                style="
+                    margin-top:5px;
+                    color:#777;
+                    font-size:12px;
+                ">
+
+                💡 কম্পিউটারে Ctrl ধরে এবং মোবাইলে একাধিক অপশন ট্যাপ করে নির্বাচন করুন।
+
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             Documents
+        ========================== -->
+
+        <div class="card">
+
+            <h3>📄 ডকুমেন্ট</h3>
+
+
+            <label for="photo">
+                সদস্যের ছবি
+            </label>
+
+            <input
+                type="file"
+                id="photo"
+                accept="image/*"
+                required>
+
+
+            <label for="shopImage">
+                দোকানের ছবি
+            </label>
+
+            <input
+                type="file"
+                id="shopImage"
+                accept="image/*"
+                required>
+
+
+            <label for="tradeLicense">
+                ট্রেড লাইসেন্স
+            </label>
+
+            <input
+                type="file"
+                id="tradeLicense"
+                accept="image/*,application/pdf"
+                required>
+
+
+            <label for="nid">
+                জাতীয় পরিচয়পত্র (NID) নম্বর
+            </label>
+
+            <input
+                type="text"
+                id="nid"
+                maxlength="17"
+                minlength="17"
+                inputmode="numeric"
+                pattern="[0-9]{17}"
+                placeholder="১৭ সংখ্যার NID নম্বর"
+                required>
+
+
+            <label for="nidImage">
+                NID এর ছবি (ঐচ্ছিক)
+            </label>
+
+            <input
+                type="file"
+                id="nidImage"
+                accept="image/*">
+
+        </div>
+
+
+        <!-- =========================
+             Declaration
+        ========================== -->
+
+        <div class="card">
+
+            <h3>✅ ঘোষণাপত্র</h3>
+
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    id="agree"
+                    required>
+
+                আমি নিশ্চিত করছি যে উপরের সকল তথ্য সঠিক।
+
+            </label>
+
+
+            <button
+                type="submit"
+                id="submitBtn">
+
+                আবেদন জমা দিন
+
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <!-- =========================
+         Developer Section
+    ========================== -->
+
+    <section
+        style="
+            max-width:700px;
+            margin:30px auto;
+            padding:25px 15px;
+            text-align:center;
+        ">
+
+        <div
+            style="
+                background:linear-gradient(
+                    135deg,
+                    #0d47a1,
+                    #1976d2
                 );
+                color:white;
+                border-radius:18px;
+                padding:28px 15px;
+                box-shadow:0 8px 25px rgba(0,0,0,.18);
+            ">
 
-            } catch (error) {
+            <div
+                style="
+                    font-size:14px;
+                    letter-spacing:1px;
+                    margin-bottom:8px;
+                    opacity:.9;
+                ">
 
-                console.error(
-                    "❌ Service Worker Registration Failed:",
-                    error
-                );
+                ✨ DEVELOPED & MAINTAINED BY
 
-            }
-
-        }
-    );
-
-}
-
-
-/* ==========================================
-   PWA Install Prompt
-========================================== */
-
-window.addEventListener(
-    "beforeinstallprompt",
-    (event) => {
-
-        console.log(
-            "✅ beforeinstallprompt fired"
-        );
-
-        event.preventDefault();
-
-        deferredPrompt = event;
+            </div>
 
 
-        if (installBtn) {
+            <div
+                style="
+                    font-size:27px;
+                    font-weight:800;
+                    line-height:1.4;
+                    text-shadow:0 2px 5px rgba(0,0,0,.25);
+                ">
 
-            installBtn.hidden = false;
+                Engineer. Mehidi Hasan Monna
 
-        }
-
-    }
-);
-
-
-/* ==========================================
-   Install App Button
-========================================== */
-
-if (installBtn) {
-
-    installBtn.addEventListener(
-        "click",
-        async () => {
-
-            if (!deferredPrompt) {
-
-                alert(
-                    "এই মুহূর্তে Install option পাওয়া যাচ্ছে না।"
-                );
-
-                return;
-
-            }
+            </div>
 
 
-            deferredPrompt.prompt();
+            <div
+                style="
+                    margin-top:8px;
+                    font-size:13px;
+                    opacity:.9;
+                ">
+
+                Founder & Developer — Telecom Group Chattogram City
+
+            </div>
+
+        </div>
+
+    </section>
 
 
-            const result =
-                await deferredPrompt.userChoice;
+    <!-- =========================
+         Admin Login
+    ========================== -->
+
+    <div class="top-menu">
+
+        <a href="./login.html">
+            🔐 Admin Login
+        </a>
+
+    </div>
 
 
-            console.log(
-                "Install result:",
-                result.outcome
+    <!-- =========================
+         Main JavaScript
+    ========================== -->
+
+    <script
+        type="module"
+        src="./script.js">
+    </script>
+
+
+    <!-- =========================
+         PWA
+    ========================== -->
+
+    <script>
+
+        let deferredPrompt = null;
+
+        const installBtn =
+            document.getElementById("installBtn");
+
+
+        /*
+         * Service Worker
+         */
+
+        if ("serviceWorker" in navigator) {
+
+            window.addEventListener(
+                "load",
+                function () {
+
+                    navigator.serviceWorker
+                        .register("./service-worker.js")
+                        .then(function (registration) {
+
+                            console.log(
+                                "✅ Service Worker:",
+                                registration.scope
+                            );
+
+                        })
+                        .catch(function (error) {
+
+                            console.error(
+                                "❌ Service Worker Error:",
+                                error
+                            );
+
+                        });
+
+                }
             );
 
-
-            deferredPrompt = null;
-
-
-            installBtn.hidden = true;
-
         }
-    );
-
-}
 
 
-/* ==========================================
-   App Installed
-========================================== */
+        /*
+         * Install Prompt
+         */
 
-window.addEventListener(
-    "appinstalled",
-    () => {
+        window.addEventListener(
+            "beforeinstallprompt",
+            function (event) {
 
-        console.log(
-            "✅ App Installed Successfully"
+                event.preventDefault();
+
+                deferredPrompt = event;
+
+                if (installBtn) {
+
+                    installBtn.hidden = false;
+
+                }
+
+            }
         );
 
 
-        if (installBtn) {
+        /*
+         * Install Button
+         */
 
-            installBtn.hidden = true;
+        installBtn?.addEventListener(
+            "click",
+            async function () {
 
-        }
+                if (!deferredPrompt) {
 
-    }
-);
+                    alert(
+                        "এই মুহূর্তে Install option পাওয়া যাচ্ছে না।"
+                    );
 
-</script>
+                    return;
+
+                }
+
+                deferredPrompt.prompt();
+
+                const choice =
+                    await deferredPrompt.userChoice;
+
+                console.log(
+                    "Install:",
+                    choice.outcome
+                );
+
+                deferredPrompt = null;
+
+                installBtn.hidden = true;
+
+            }
+        );
+
+
+        /*
+         * App Installed
+         */
+
+        window.addEventListener(
+            "appinstalled",
+            function () {
+
+                console.log(
+                    "✅ App Installed"
+                );
+
+                if (installBtn) {
+
+                    installBtn.hidden = true;
+
+                }
+
+            }
+        );
+
+    </script>
 
 
 </body>
