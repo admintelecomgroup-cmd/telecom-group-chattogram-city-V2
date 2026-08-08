@@ -294,36 +294,47 @@ id="submitBtn">
 </a>
 
 </div>
-<!-- ========================= -->
-<!-- JavaScript -->
-<!-- ========================= -->
+<!-- =========================
+     JavaScript
+========================= -->
 
 <script type="module" src="script.js"></script>
 
-<!-- ========================= -->
-<!-- PWA Install & Service Worker
-<!-- ========================= -->
+<!-- =========================
+     PWA Install + Service Worker
+========================= -->
 
 <script>
 
-let deferredPrompt;
+let deferredPrompt = null;
 
 const installBtn = document.getElementById("installBtn");
 
-// Register Service Worker
+/* Service Worker */
+
 if ("serviceWorker" in navigator) {
 
     window.addEventListener("load", async () => {
 
         try {
 
-            const registration = await navigator.serviceWorker.register("./service-worker.js");
+            const registration =
+                await navigator.serviceWorker.register(
+                    "./service-worker.js",
+                    { scope: "./" }
+                );
 
-            console.log("✅ Service Worker Registered:", registration.scope);
+            console.log(
+                "✅ Service Worker Registered:",
+                registration.scope
+            );
 
         } catch (error) {
 
-            console.error("❌ Service Worker Registration Failed:", error);
+            console.error(
+                "❌ Service Worker Registration Failed:",
+                error
+            );
 
         }
 
@@ -331,69 +342,82 @@ if ("serviceWorker" in navigator) {
 
 }
 
-// Install Prompt
-window.addEventListener("beforeinstallprompt", (event) => {
+/* PWA Install */
 
-    event.preventDefault();
+window.addEventListener(
+    "beforeinstallprompt",
+    (event) => {
 
-    deferredPrompt = event;
+        console.log("✅ beforeinstallprompt fired");
 
-    if (installBtn) {
+        event.preventDefault();
 
-        installBtn.hidden = false;
+        deferredPrompt = event;
 
-    }
+        if (installBtn) {
 
-});
+            installBtn.hidden = false;
 
-installBtn?.addEventListener("click", async () => {
-
-    if (!deferredPrompt) return;
-
-    installBtn.hidden = true;
-
-    deferredPrompt.prompt();
-
-    const { outcome } = await deferredPrompt.userChoice;
-
-    console.log("Install Result:", outcome);
-
-    deferredPrompt = null;
-
-});
-
-window.addEventListener("appinstalled", () => {
-
-    console.log("✅ App Installed Successfully");
-
-    if (installBtn) {
-
-        installBtn.hidden = true;
+        }
 
     }
+);
 
-});
-<script>
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function () {
-        navigator.serviceWorker
-            .register("./service-worker.js", { scope: "./" })
-            .then(function (registration) {
-                console.log(
-                    "Service Worker Registered:",
-                    registration.scope
+/* Install Button */
+
+if (installBtn) {
+
+    installBtn.addEventListener(
+        "click",
+        async () => {
+
+            if (!deferredPrompt) {
+
+                alert(
+                    "এই মুহূর্তে Install option পাওয়া যাচ্ছে না।"
                 );
-            })
-            .catch(function (error) {
-                console.error(
-                    "Service Worker Error:",
-                    error
-                );
-            });
-    });
+
+                return;
+
+            }
+
+            deferredPrompt.prompt();
+
+            const result =
+                await deferredPrompt.userChoice;
+
+            console.log(
+                "Install result:",
+                result.outcome
+            );
+
+            deferredPrompt = null;
+
+            installBtn.hidden = true;
+
+        }
+    );
+
 }
+
+/* App Installed */
+
+window.addEventListener(
+    "appinstalled",
+    () => {
+
+        console.log("✅ App Installed Successfully");
+
+        if (installBtn) {
+
+            installBtn.hidden = true;
+
+        }
+
+    }
+);
+
 </script>
 
 </body>
-
 </html>
