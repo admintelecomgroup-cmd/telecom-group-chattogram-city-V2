@@ -1,171 +1,392 @@
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>Admin Dashboard | Telecom Group Chattogram City</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<meta name="theme-color" content="#0d47a1">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Telecom Group">
+    <title>
+        Admin Dashboard | Telecom Group Chattogram City
+    </title>
 
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+    <!-- PWA -->
+    <meta
+        name="theme-color"
+        content="#0d47a1">
 
-<link rel="stylesheet" href="style.css">
+    <meta
+        name="mobile-web-app-capable"
+        content="yes">
+
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes">
+
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="default">
+
+    <meta
+        name="apple-mobile-web-app-title"
+        content="Telecom Group">
+
+    <!-- Manifest -->
+    <link
+        rel="manifest"
+        href="./manifest.json">
+
+    <!-- Icons -->
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="192x192"
+        href="./icons/icon-192.png">
+
+    <link
+        rel="apple-touch-icon"
+        href="./icons/icon-192.png">
+
+    <!-- CSS -->
+    <link
+        rel="stylesheet"
+        href="./style.css">
 
 </head>
 
+
 <body>
+
+
+<!-- ================================================= -->
+<!-- Header -->
+<!-- ================================================= -->
 
 <header class="header">
 
-<h1>📊 Admin Dashboard</h1>
+    <h1>📊 Admin Dashboard</h1>
 
-<h2>Telecom Group Chattogram City</h2>
+    <h2>
+        Telecom Group Chattogram City
+    </h2>
 
-<p>Member Management System</p>
+    <p>
+        Member Management System
+    </p>
 
 </header>
 
+
+<!-- ================================================= -->
+<!-- Main Container -->
+<!-- ================================================= -->
+
 <div class="container">
 
-<div class="card">
 
-<h3>📈 সদস্য তথ্য</h3>
+    <!-- ============================================= -->
+    <!-- Statistics -->
+    <!-- ============================================= -->
 
-<div class="stats">
+    <div class="card">
 
-<div class="stat-card">
-<h4>মোট সদস্য</h4>
-<p><b>0</b></p>
+        <h3>
+            📈 সদস্য তথ্য
+        </h3>
+
+
+        <div class="stats">
+
+
+            <!-- Total -->
+
+            <div class="stat-card">
+
+                <h4>
+                    মোট সদস্য
+                </h4>
+
+                <p>
+                    <b>0</b>
+                </p>
+
+            </div>
+
+
+            <!-- Pending -->
+
+            <div class="stat-card">
+
+                <h4>
+                    Pending
+                </h4>
+
+                <p>
+                    <b>0</b>
+                </p>
+
+            </div>
+
+
+            <!-- Approved -->
+
+            <div class="stat-card">
+
+                <h4>
+                    Approved
+                </h4>
+
+                <p>
+                    <b>0</b>
+                </p>
+
+            </div>
+
+
+            <!-- Rejected -->
+
+            <div class="stat-card">
+
+                <h4>
+                    Rejected
+                </h4>
+
+                <p>
+                    <b>0</b>
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ============================================= -->
+    <!-- Member List -->
+    <!-- ============================================= -->
+
+    <div class="card">
+
+        <h3>
+            📋 সদস্য তালিকা
+        </h3>
+
+
+        <!-- Search -->
+
+        <input
+            type="text"
+            id="search"
+            placeholder="🔍 নাম বা মোবাইল দিয়ে সার্চ করুন..."
+            autocomplete="off"
+            onkeyup="searchMember()">
+
+
+        <!-- Table -->
+
+        <div class="table-box">
+
+            <table id="memberTable">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Member ID
+                        </th>
+
+                        <th>
+                            নাম
+                        </th>
+
+                        <th>
+                            মোবাইল
+                        </th>
+
+                        <th>
+                            ব্যবসা
+                        </th>
+
+                        <th>
+                            স্ট্যাটাস
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <!--
+                        Supabase থেকে
+                        JavaScript এখানে
+                        Member Data বসাবে
+                    -->
+
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+    </div>
+
+
 </div>
 
-<div class="stat-card">
-<h4>Pending</h4>
-<p><b>0</b></p>
-</div>
 
-<div class="stat-card">
-<h4>Approved</h4>
-<p><b>0</b></p>
-</div>
 
-<div class="stat-card">
-<h4>Rejected</h4>
-<p><b>0</b></p>
-</div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h3>📋 সদস্য তালিকা</h3>
-
-<input
-type="text"
-id="search"
-placeholder="🔍 নাম বা মোবাইল দিয়ে সার্চ করুন..."
-onkeyup="searchMember()">
-
-<div class="table-box">
-
-<table id="memberTable">
-
-<thead>
-
-<tr>
-
-<th>Member ID</th>
-<th>নাম</th>
-<th>মোবাইল</th>
-<th>ব্যবসা</th>
-<th>স্ট্যাটাস</th>
-<th>Action</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-</div>
+<!-- ================================================= -->
+<!-- Top Menu -->
+<!-- ================================================= -->
 
 <div class="top-menu">
 
-<a href="index.html">
-🏠 হোম
-</a>
 
-<button type="button" onclick="logout()">
-🚪 Logout
-</button>
+    <a href="./index.html">
+        🏠 হোম
+    </a>
 
-</div>
 
-<div id="memberModal" class="modal">
+    <button
+        type="button"
+        onclick="logout()">
 
-<div class="modal-content">
+        🚪 Logout
 
-<span class="close" onclick="closeModal()">
+    </button>
 
-&times;
-
-</span>
-
-<h2>👤 সদস্যের বিস্তারিত তথ্য</h2>
-
-<div id="memberDetails"></div>
 
 </div>
 
+
+
+<!-- ================================================= -->
+<!-- Member Details Modal -->
+<!-- ================================================= -->
+
+<div
+    id="memberModal"
+    class="modal">
+
+
+    <div class="modal-content">
+
+
+        <!-- Close -->
+
+        <span
+            class="close"
+            onclick="closeModal()">
+
+            &times;
+
+        </span>
+
+
+        <h2>
+            👤 সদস্যের বিস্তারিত তথ্য
+        </h2>
+
+
+        <div id="memberDetails">
+
+            <!-- JavaScript এখানে তথ্য দেখাবে -->
+
+        </div>
+
+
+    </div>
+
 </div>
 
-<button id="installBtn" hidden>
-📲 Install App
-</button>
 
-<script type="module" src="script.js"></script>
+
+<!-- ================================================= -->
+<!-- PWA Install Button -->
+<!-- ================================================= -->
+
+<div class="install-box">
+
+    <button
+        type="button"
+        id="installBtn"
+        hidden>
+
+        📲 Install App
+
+    </button>
+
+</div>
+
+
+
+<!-- ================================================= -->
+<!-- JavaScript -->
+<!-- ================================================= -->
+
+<script
+    type="module"
+    src="./script.js">
+</script>
+
+
+
+<!-- ================================================= -->
+<!-- Service Worker -->
+<!-- ================================================= -->
 
 <script>
 
 if ("serviceWorker" in navigator) {
 
-window.addEventListener("load", async () => {
+    window.addEventListener(
+        "load",
+        async () => {
 
-try {
+            try {
 
-const registration =
-await navigator.serviceWorker.register("./service-worker.js");
+                const registration =
+                    await navigator.serviceWorker.register(
+                        "./service-worker.js"
+                    );
 
-console.log("Service Worker Registered:", registration.scope);
+                console.log(
+                    "✅ Service Worker Registered:",
+                    registration.scope
+                );
 
-} catch(err){
+            } catch (error) {
 
-console.error(err);
+                console.error(
+                    "❌ Service Worker Registration Failed:",
+                    error
+                );
 
-}
+            }
 
-});
+        }
+    );
 
 }
 
 </script>
 
+
 </body>
+
 </html>
