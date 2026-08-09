@@ -283,17 +283,7 @@ async function registerMember() {
         "১০, ১৩ অথবা ১৭ সংখ্যার NID লিখুন"
     );
     return;
-}
-
-const nidImageInput = document.getElementById("nidImage");
-
-if (!nidImageInput || !nidImageInput.files || nidImageInput.files.length === 0) {
-    showAlert("NID এর ছবি অবশ্যই দিতে হবে");
-    return;
-}
-
-const nidImage = nidImageInput.files[0];
-
+} 
 if (!agree) {
     showAlert(
         "ঘোষণাপত্রে টিক দিন"
