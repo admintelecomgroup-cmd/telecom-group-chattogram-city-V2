@@ -457,19 +457,18 @@
                 জাতীয় পরিচয়পত্র (NID) নম্বর
             </label>
 
-            <input
-                type="text"
-                id="nid"
-                maxlength="17"
-                minlength="17"
-                inputmode="numeric"
-                pattern="[0-9]{17}"
-                placeholder="১৭ সংখ্যার NID নম্বর"
-                required>
+           <input
+    type="text"
+    id="nid"
+    maxlength="17"
+    inputmode="numeric"
+    pattern="[0-9]{10}|[0-9]{13}|[0-9]{17}"
+    placeholder="১০, ১৩ অথবা ১৭ সংখ্যার NID নম্বর"
+    required>
 
 
             <label for="nidImage">
-                NID এর ছবি (ঐচ্ছিক)
+                NID এর ছবি
             </label>
 
             <input
