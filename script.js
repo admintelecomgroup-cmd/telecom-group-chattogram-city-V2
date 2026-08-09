@@ -92,13 +92,84 @@ async function uploadFile(file, bucket) {
 
     if (!file) return "";
 
+    let uploadData = file;
+    let fileName = file.name;
+
+    // IMAGE COMPRESSION
+    if (file.type.startsWith("image/")) {
+
+        const image = new Image();
+
+        const imageURL =
+            URL.createObjectURL(file);
+
+        await new Promise((resolve, reject) => {
+            image.onload = resolve;
+            image.onerror = reject;
+            image.src = imageURL;
+        });
+
+        const MAX_WIDTH = 1600;
+        const MAX_HEIGHT = 1600;
+
+        let width = image.width;
+        let height = image.height;
+
+        if (
+            width > MAX_WIDTH ||
+            height > MAX_HEIGHT
+        ) {
+            const ratio = Math.min(
+                MAX_WIDTH / width,
+                MAX_HEIGHT / height
+            );
+
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+        }
+
+        const canvas =
+            document.createElement("canvas");
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx =
+            canvas.getContext("2d");
+
+        ctx.drawImage(
+            image,
+            0,
+            0,
+            width,
+            height
+        );
+
+        uploadData =
+            await new Promise(resolve => {
+                canvas.toBlob(
+                    blob => resolve(blob),
+                    "image/jpeg",
+                    0.72
+                );
+            });
+
+        URL.revokeObjectURL(imageURL);
+
+        fileName =
+            file.name.replace(
+                /\.[^/.]+$/,
+                ""
+            ) + ".jpg";
+    }
+
     const safeName =
-        file.name.replace(
+        fileName.replace(
             /[^a-zA-Z0-9._-]/g,
             "_"
         );
 
-    const fileName =
+    const finalFileName =
         Date.now() +
         "_" +
         Math.random()
@@ -111,10 +182,13 @@ async function uploadFile(file, bucket) {
         await supabase.storage
             .from(bucket)
             .upload(
-                fileName,
-                file,
+                finalFileName,
+                uploadData,
                 {
-                    upsert: false
+                    upsert: false,
+                    contentType:
+                        uploadData.type ||
+                        file.type
                 }
             );
 
@@ -125,11 +199,12 @@ async function uploadFile(file, bucket) {
     const { data } =
         supabase.storage
             .from(bucket)
-            .getPublicUrl(fileName);
+            .getPublicUrl(
+                finalFileName
+            );
 
     return data.publicUrl;
 }
-
 /* =========================================================
    DUPLICATE CHECK
    ========================================================= */
