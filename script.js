@@ -278,19 +278,28 @@ async function registerMember() {
             return;
         }
 
-        if (!/^[0-9]{17}$/.test(nid)) {
-            showAlert(
-                "১৭ সংখ্যার NID লিখুন"
-            );
-            return;
-        }
+   if (!/^(?:[0-9]{10}|[0-9]{13}|[0-9]{17})$/.test(nid)) {
+    showAlert(
+        "১০, ১৩ অথবা ১৭ সংখ্যার NID লিখুন"
+    );
+    return;
+}
 
-        if (!agree) {
-            showAlert(
-                "ঘোষণাপত্রে টিক দিন"
-            );
-            return;
-        }
+const nidImageInput = document.getElementById("nidImage");
+
+if (!nidImageInput || !nidImageInput.files || nidImageInput.files.length === 0) {
+    showAlert("NID এর ছবি অবশ্যই দিতে হবে");
+    return;
+}
+
+const nidImage = nidImageInput.files[0];
+
+if (!agree) {
+    showAlert(
+        "ঘোষণাপত্রে টিক দিন"
+    );
+    return;
+}
 
         if (await mobileExists(mobile)) {
             showAlert(
