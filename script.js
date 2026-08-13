@@ -507,7 +507,7 @@ async function loadMembers() {
         if (tbody) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="6"
+                    <td colspan="9"
                         style="text-align:center;">
                         ⏳ সদস্য তথ্য লোড হচ্ছে...
                     </td>
@@ -543,7 +543,7 @@ async function loadMembers() {
 
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="6"
+                    <td colspan="9"
                         style="text-align:center;">
                         কোনো সদস্য পাওয়া যায়নি।
                     </td>
