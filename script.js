@@ -491,7 +491,7 @@ if (form) {
 
 /* =========================================================
    ADMIN - LOAD MEMBERS
-   ========================================================= */
+   ====।==================================================== */
 
 async function loadMembers() {
 
@@ -765,112 +765,194 @@ async function loadMembers() {
                 if (member.status === "Approved") {
                     approved++;
                 }
+/* =========================================================
+   ADMIN - LOAD MEMBERS
+   ========================================================= */
 
-                if (member.status === "Rejected") {
-                    rejected++;
-                }
+async function loadMembers() {
 
-                const row =
-                    document.createElement("tr");
+    const table = document.getElementById("memberTable");
+    const tbody = document.getElementById("memberTableBody");
 
-                row.innerHTML = `
+    if (!table || !tbody) {
+        console.log("Admin member table not found.");
+        return;
+    }
 
-                    <td>
-                        ${escapeHTML(
-                            member.memberid || "-"
-                        )}
-                    </td>
+    try {
 
-                    <td>
-                        ${escapeHTML(
-                            member.name || "-"
-                        )}
-                    </td>
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center;">
+                    ⏳ সদস্য তথ্য লোড হচ্ছে...
+                </td>
+            </tr>
+        `;
 
-                    <td>
-                        ${escapeHTML(
-                            member.mobile || "-"
-                        )}
-                    </td>
-
-                    <td>
-                        ${escapeHTML(
-                            member.whatsapp || "-"
-                        )}
-                    </td>
-
-                    <td>
-                        ${escapeHTML(
-                            member.shop || "-"
-                        )}
-                    </td>
-
-                    <td>
-                        ${escapeHTML(
-                            member.address || "-"
-                        )}
-                    </td>
-
-                    <td>
-                        ${escapeHTML(
-                            member.status || "-"
-                        )}
-                    </td>
-
-                    <td>
-
-                        <button
-                            type="button"
-                            class="member-action"
-                            data-action="view"
-                            data-id="${member.id}">
-                            👁️
-                        </button>
-
-                        <button
-                            type="button"
-                            class="member-action"
-                            data-action="approve"
-                            data-id="${member.id}">
-                            ✅
-                        </button>
-
-                        <button
-                            type="button"
-                            class="member-action"
-                            data-action="reject"
-                            data-id="${member.id}">
-                            ❌
-                        </button>
-
-                        <button
-                            type="button"
-                            class="member-action"
-                            data-action="edit"
-                            data-id="${member.id}">
-                            ✏️
-                        </button>
-
-                        <button
-                            type="button"
-                            class="member-action"
-                            data-action="delete"
-                            data-id="${member.id}">
-                            🗑️
-                        </button>
-
-                    </td>
-                `;
-
-                tbody.appendChild(row);
+        const { data: members, error } = await supabase
+            .from("members")
+            .select("*")
+            .order("id", {
+                ascending: false
             });
+
+        if (error) {
+            throw error;
         }
+
+        tbody.innerHTML = "";
+
+        let total = 0;
+        let pending = 0;
+        let approved = 0;
+        let rejected = 0;
+
+        if (!members || members.length === 0) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" style="text-align:center;">
+                        কোনো সদস্য পাওয়া যায়নি।
+                    </td>
+                </tr>
+            `;
+
+            updateStats(
+                0,
+                0,
+                0,
+                0
+            );
+
+            return;
+        }
+
+        members.forEach(member => {
+
+            total++;
+
+            const status =
+                String(member.status || "")
+                    .trim()
+                    .toLowerCase();
+
+            if (status === "pending") {
+                pending++;
+            }
+
+            if (status === "approved") {
+                approved++;
+            }
+
+            if (status === "rejected") {
+                rejected++;
+            }
+
+            const row =
+                document.createElement("tr");
+
+            row.innerHTML = `
+
+                <td>
+                    ${escapeHTML(
+                        member.memberid || "-"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        member.name || "-"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        member.mobile || "-"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        member.whatsapp || "-"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        member.shop || "-"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        member.address || "-"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        member.status || "-"
+                    )}
+                </td>
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="member-action"
+                        data-action="view"
+                        data-id="${member.id}">
+                        👁️
+                    </button>
+
+                    <button
+                        type="button"
+                        class="member-action"
+                        data-action="approve"
+                        data-id="${member.id}">
+                        ✅
+                    </button>
+
+                    <button
+                        type="button"
+                        class="member-action"
+                        data-action="reject"
+                        data-id="${member.id}">
+                        ❌
+                    </button>
+
+                    <button
+                        type="button"
+                        class="member-action"
+                        data-action="edit"
+                        data-id="${member.id}">
+                        ✏️
+                    </button>
+
+                    <button
+                        type="button"
+                        class="member-action"
+                        data-action="delete"
+                        data-id="${member.id}">
+                        🗑️
+                    </button>
+
+                </td>
+            `;
+
+            tbody.appendChild(row);
+        });
 
         updateStats(
             total,
             pending,
             approved,
             rejected
+        );
+
+        console.log(
+            "Members loaded:",
+            members.length
         );
 
     } catch (error) {
@@ -880,12 +962,22 @@ async function loadMembers() {
             error
         );
 
-        showAlert(
-            error?.message ||
-            "সদস্য তথ্য লোড করা যায়নি।"
-        );
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8"
+                    style="text-align:center;color:red;">
+                    ❌ সদস্য তথ্য লোড করা যায়নি।
+                    <br>
+                    ${escapeHTML(
+                        error?.message ||
+                        "Unknown error"
+                    )}
+                </td>
+            </tr>
+        `;
     }
 }
+
 
 /* =========================================================
    ESCAPE HTML
@@ -900,6 +992,7 @@ function escapeHTML(value) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
 
 /* =========================================================
    UPDATE STATS
@@ -925,7 +1018,6 @@ function updateStats(
         cards[3].textContent = rejected;
     }
 }
-
 /* =========================================================
    VIEW MEMBER
    ========================================================= */
