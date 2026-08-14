@@ -696,7 +696,77 @@ async function loadMembers() {
 
                 if (
                     member.status === "Rejected"
-                ) {
+/* =========================================================
+   ADMIN - LOAD MEMBERS
+   ========================================================= */
+
+async function loadMembers() {
+
+    if (!table) return;
+
+    try {
+
+        const tbody =
+            document.getElementById(
+                "memberTableBody"
+            );
+
+        if (!tbody) return;
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8"
+                    style="text-align:center;">
+                    ⏳ সদস্য তথ্য লোড হচ্ছে...
+                </td>
+            </tr>
+        `;
+
+        const { data: members, error } =
+            await supabase
+                .from("members")
+                .select("*")
+                .order("id", {
+                    ascending: false
+                });
+
+        if (error) {
+            throw error;
+        }
+
+        tbody.innerHTML = "";
+
+        let total = 0;
+        let pending = 0;
+        let approved = 0;
+        let rejected = 0;
+
+        if (!members || members.length === 0) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8"
+                        style="text-align:center;">
+                        কোনো সদস্য পাওয়া যায়নি।
+                    </td>
+                </tr>
+            `;
+
+        } else {
+
+            members.forEach(member => {
+
+                total++;
+
+                if (member.status === "Pending") {
+                    pending++;
+                }
+
+                if (member.status === "Approved") {
+                    approved++;
+                }
+
+                if (member.status === "Rejected") {
                     rejected++;
                 }
 
@@ -705,56 +775,48 @@ async function loadMembers() {
 
                 row.innerHTML = `
 
-                    <!-- Member ID -->
                     <td>
                         ${escapeHTML(
                             member.memberid || "-"
                         )}
                     </td>
 
-                    <!-- Name -->
                     <td>
                         ${escapeHTML(
                             member.name || "-"
                         )}
                     </td>
 
-                    <!-- Mobile -->
                     <td>
                         ${escapeHTML(
                             member.mobile || "-"
                         )}
                     </td>
 
-                    <!-- WhatsApp -->
                     <td>
                         ${escapeHTML(
                             member.whatsapp || "-"
                         )}
                     </td>
 
-                    <!-- Shop -->
                     <td>
                         ${escapeHTML(
                             member.shop || "-"
                         )}
                     </td>
 
-                    <!-- Address -->
                     <td>
                         ${escapeHTML(
                             member.address || "-"
                         )}
                     </td>
 
-                    <!-- Status -->
                     <td>
                         ${escapeHTML(
                             member.status || "-"
                         )}
                     </td>
 
-                    <!-- Action -->
                     <td>
 
                         <button
