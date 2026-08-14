@@ -16,7 +16,451 @@
     <link rel="icon" href="./icons/icon-192.png">
     <link rel="apple-touch-icon" href="./icons/icon-192.png">
 
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style.css"> 
+    <style>
+/* =========================================================
+   ADMIN PANEL - A4 PRINT CSS
+   ========================================================= */
+
+@media print {
+
+    /* =====================================================
+       A4 PAPER
+       ===================================================== */
+
+    @page {
+        size: A4 landscape;
+        margin: 8mm;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        box-sizing: border-box !important;
+    }
+
+    html,
+    body {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-size: 8px !important;
+    }
+
+
+    /* =====================================================
+       TOP MENU
+       Print-এ থাকবে
+       ===================================================== */
+
+    .top-menu {
+        display: flex !important;
+        width: 100% !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 15px !important;
+
+        margin: 4px 0 6px 0 !important;
+        padding: 4px !important;
+
+        background: #ffffff !important;
+        color: #000000 !important;
+
+        box-shadow: none !important;
+        border: 1px solid #000000 !important;
+    }
+
+    .top-menu a,
+    .top-menu button {
+        display: inline-block !important;
+
+        padding: 3px 10px !important;
+
+        background: #ffffff !important;
+        color: #000000 !important;
+
+        border: 1px solid #000000 !important;
+        border-radius: 2px !important;
+
+        font-size: 8px !important;
+        text-decoration: none !important;
+    }
+
+
+    /* =====================================================
+       HEADER
+       ===================================================== */
+
+    .header {
+        width: 100% !important;
+
+        margin: 0 0 5px 0 !important;
+        padding: 4px 0 !important;
+
+        background: #ffffff !important;
+        color: #000000 !important;
+
+        box-shadow: none !important;
+        text-align: center !important;
+    }
+
+    .header h1 {
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 14px !important;
+        line-height: 18px !important;
+    }
+
+    .header h2 {
+        margin: 1px 0 !important;
+        padding: 0 !important;
+
+        font-size: 10px !important;
+        line-height: 13px !important;
+    }
+
+    .header p {
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 8px !important;
+        line-height: 11px !important;
+    }
+
+
+    /* =====================================================
+       MAIN CONTAINER
+       ===================================================== */
+
+    .container {
+        width: 100% !important;
+        max-width: none !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+
+    /* =====================================================
+       MEMBERS INFORMATION / STATISTICS
+       এটি Print-এ থাকবে
+       ===================================================== */
+
+    .container > .card:first-child {
+        display: block !important;
+        width: 100% !important;
+
+        margin: 0 0 5px 0 !important;
+        padding: 3px !important;
+
+        background: #ffffff !important;
+        color: #000000 !important;
+
+        border: 1px solid #000000 !important;
+        box-shadow: none !important;
+    }
+
+    .container > .card:first-child h3 {
+        display: block !important;
+
+        margin: 0 0 3px 0 !important;
+        padding: 0 !important;
+
+        font-size: 10px !important;
+        line-height: 13px !important;
+    }
+
+    .stats {
+        display: flex !important;
+
+        width: 100% !important;
+
+        gap: 4px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .stat-card {
+        display: block !important;
+
+        flex: 1 1 25% !important;
+
+        margin: 0 !important;
+        padding: 3px !important;
+
+        background: #ffffff !important;
+        color: #000000 !important;
+
+        border: 1px solid #000000 !important;
+        box-shadow: none !important;
+
+        text-align: center !important;
+    }
+
+    .stat-card h4 {
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 7px !important;
+        line-height: 9px !important;
+    }
+
+    .stat-card p {
+        margin: 1px 0 0 0 !important;
+        padding: 0 !important;
+
+        font-size: 10px !important;
+        line-height: 12px !important;
+    }
+
+
+    /* =====================================================
+       MEMBER LIST CARD
+       ===================================================== */
+
+    .container > .card:nth-child(2) {
+        display: block !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        background: #ffffff !important;
+        color: #000000 !important;
+
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .container > .card:nth-child(2) h3 {
+        display: block !important;
+
+        margin: 3px 0 !important;
+        padding: 0 !important;
+
+        font-size: 10px !important;
+        line-height: 13px !important;
+    }
+
+
+    /* =====================================================
+       SEARCH - Print-এ থাকবে না
+       ===================================================== */
+
+    #search {
+        display: none !important;
+    }
+
+
+    /* =====================================================
+       TABLE BOX
+       ===================================================== */
+
+    .table-box {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: visible !important;
+    }
+
+
+    /* =====================================================
+       MEMBER TABLE
+       ===================================================== */
+
+    #memberTable {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        table-layout: fixed !important;
+        border-collapse: collapse !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        background: #ffffff !important;
+        color: #000000 !important;
+
+        font-size: 7.5px !important;
+    }
+
+
+    /* =====================================================
+       TABLE CELLS
+       ===================================================== */
+
+    #memberTable th,
+    #memberTable td {
+        border: 1px solid #000000 !important;
+
+        padding: 3px 2px !important;
+
+        vertical-align: middle !important;
+
+        background: #ffffff !important;
+        color: #000000 !important;
+
+        word-wrap: break-word !important;
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+    }
+
+
+    /* =====================================================
+       TABLE HEADER
+       ===================================================== */
+
+    #memberTable th {
+        font-weight: bold !important;
+
+        text-align: center !important;
+
+        white-space: nowrap !important;
+
+        font-size: 7.5px !important;
+    }
+
+
+    /* =====================================================
+       8th COLUMN = ACTION
+       Print-এ সম্পূর্ণ বাদ যাবে
+       ===================================================== */
+
+    #memberTable th:nth-child(8),
+    #memberTable td:nth-child(8) {
+        display: none !important;
+    }
+
+
+    /* =====================================================
+       PRINT WIDTH
+       
+       1 = Member ID
+       2 = নাম
+       3 = মোবাইল
+       4 = WhatsApp
+       5 = দোকানের নাম
+       6 = ঠিকানা
+       7 = স্ট্যাটাস
+       ===================================================== */
+
+    #memberTable th:nth-child(1),
+    #memberTable td:nth-child(1) {
+        width: 12% !important;
+    }
+
+    #memberTable th:nth-child(2),
+    #memberTable td:nth-child(2) {
+        width: 14% !important;
+    }
+
+    #memberTable th:nth-child(3),
+    #memberTable td:nth-child(3) {
+        width: 12% !important;
+    }
+
+    #memberTable th:nth-child(4),
+    #memberTable td:nth-child(4) {
+        width: 12% !important;
+    }
+
+    #memberTable th:nth-child(5),
+    #memberTable td:nth-child(5) {
+        width: 16% !important;
+    }
+
+    #memberTable th:nth-child(6),
+    #memberTable td:nth-child(6) {
+        width: 24% !important;
+    }
+
+    #memberTable th:nth-child(7),
+    #memberTable td:nth-child(7) {
+        width: 10% !important;
+
+        text-align: center !important;
+    }
+
+
+    /* =====================================================
+       ACTION BUTTON
+       নিরাপত্তার জন্য সম্পূর্ণ লুকানো
+       ===================================================== */
+
+    #memberTable .member-action {
+        display: none !important;
+    }
+
+
+    /* =====================================================
+       TABLE ROW BREAK বন্ধ
+       ===================================================== */
+
+    #memberTable tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    #memberTable thead {
+        display: table-header-group !important;
+    }
+
+    #memberTable tbody {
+        display: table-row-group !important;
+    }
+
+
+    /* =====================================================
+       ADDRESS
+       ===================================================== */
+
+    #memberTable td:nth-child(6) {
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+    }
+
+
+    /* =====================================================
+       MODAL - Print হবে না
+       ===================================================== */
+
+    .modal {
+        display: none !important;
+    }
+
+    .close {
+        display: none !important;
+    }
+
+
+    /* =====================================================
+       INSTALL BUTTON - Print হবে না
+       ===================================================== */
+
+    .install-box {
+        display: none !important;
+    }
+
+
+    /* =====================================================
+       PRINT PAGE CLEANUP
+       ===================================================== */
+
+    a {
+        color: #000000 !important;
+        text-decoration: none !important;
+    }
+
+}
+</style>
 </head>
 
 <body>
