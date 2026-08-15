@@ -17,7 +17,106 @@
     <link rel="apple-touch-icon" href="./icons/icon-192.png">
 
     <link rel="stylesheet" href="./style.css"> 
-    <style>
+    <style> 
+/* =========================================================
+   FULL MEMBER EDIT FORM
+   ========================================================= */
+
+.full-edit-form {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.full-edit-form h2 {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.edit-field {
+    margin-bottom: 14px;
+}
+
+.edit-field label,
+.edit-upload-box label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.edit-field input,
+.edit-field textarea,
+.edit-field select,
+.edit-upload-box input[type="file"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.edit-field textarea {
+    resize: vertical;
+}
+
+.edit-field input:disabled {
+    background: #eeeeee;
+    cursor: not-allowed;
+}
+
+.edit-upload-box {
+    margin-top: 18px;
+    margin-bottom: 18px;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.edit-upload-box h3 {
+    margin-top: 0;
+}
+
+.edit-file-preview {
+    margin-bottom: 12px;
+}
+
+#saveFullEditBtn {
+    background: #0d47a1;
+    color: white;
+}
+
+#saveFullEditBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#cancelFullEditBtn {
+    background: #eeeeee;
+    color: #222;
+}
+
+@media (max-width: 600px) {
+
+    .full-edit-form {
+        max-width: 100%;
+    }
+
+    .full-edit-form h2 {
+        font-size: 20px;
+    }
+
+    .edit-field input,
+    .edit-field textarea,
+    .edit-field select {
+        font-size: 16px;
+    }
+
+}
+
+</style> 
+ <style> 
 /* =========================================================
    ADMIN PANEL - A4 PRINT CSS
    ========================================================= */
@@ -459,7 +558,7 @@
         text-decoration: none !important;
     }
 
-}
+} 
 </style>
 </head>
 
