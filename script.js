@@ -1089,7 +1089,7 @@ async function rejectMember(id) {
 }
 
 /* =========================================================
-   EDIT
+   EDIT MEMBER - FULL FORM + FILE UPLOAD
    ========================================================= */
 
 async function editMember(id) {
@@ -1107,80 +1107,977 @@ async function editMember(id) {
             throw error;
         }
 
-        const name =
-            prompt(
-                "নাম",
-                data.name || ""
+        const modal =
+            document.getElementById("memberModal");
+
+        const details =
+            document.getElementById("memberDetails");
+
+        if (!modal || !details) {
+            showAlert(
+                "❌ Edit Form খোলা যাচ্ছে না।"
             );
-
-        if (name === null) return;
-
-        const mobile =
-            prompt(
-                "মোবাইল",
-                data.mobile || ""
-            );
-
-        if (mobile === null) return;
-
-        const shop =
-            prompt(
-                "দোকানের নাম",
-                data.shop || ""
-            );
-
-        if (shop === null) return;
-
-        const address =
-            prompt(
-                "ঠিকানা",
-                data.address || ""
-            );
-
-        if (address === null) return;
-
-        const business =
-            prompt(
-                "ব্যবসার ধরন",
-                data.business || ""
-            );
-
-        if (business === null) return;
-
-        const { error: updateError } =
-            await supabase
-                .from("members")
-                .update({
-                    name: name.trim(),
-                    mobile: mobile.trim(),
-                    shop: shop.trim(),
-                    address: address.trim(),
-                    business: business.trim()
-                })
-                .eq("id", id);
-
-        if (updateError) {
-            throw updateError;
+            return;
         }
 
-        showAlert(
-            "✅ তথ্য সফলভাবে আপডেট হয়েছে"
+        /* =================================================
+           CURRENT FILE PREVIEW
+           ================================================= */
+
+        const photoPreview = data.photo
+            ? `
+                <div class="edit-file-preview">
+                    <p><b>বর্তমান সদস্যের ছবি:</b></p>
+
+                    <img
+                        src="${escapeHTML(data.photo)}"
+                        alt="Member Photo"
+                        style="
+                            width:120px;
+                            height:120px;
+                            object-fit:cover;
+                            border-radius:8px;
+                            border:1px solid #ccc;
+                        "
+                    >
+                </div>
+            `
+            : `
+                <p>বর্তমান সদস্যের ছবি নেই।</p>
+            `;
+
+        const shopPreview = data.shopimage
+            ? `
+                <div class="edit-file-preview">
+                    <p><b>বর্তমান দোকানের ছবি:</b></p>
+
+                    <img
+                        src="${escapeHTML(data.shopimage)}"
+                        alt="Shop Photo"
+                        style="
+                            width:150px;
+                            max-height:120px;
+                            object-fit:cover;
+                            border-radius:8px;
+                            border:1px solid #ccc;
+                        "
+                    >
+                </div>
+            `
+            : `
+                <p>বর্তমান দোকানের ছবি নেই।</p>
+            `;
+
+        const nidPreview = data.nidimage
+            ? `
+                <div class="edit-file-preview">
+                    <p><b>বর্তমান NID ছবি:</b></p>
+
+                    <img
+                        src="${escapeHTML(data.nidimage)}"
+                        alt="NID"
+                        style="
+                            width:180px;
+                            max-height:120px;
+                            object-fit:contain;
+                            border-radius:8px;
+                            border:1px solid #ccc;
+                        "
+                    >
+                </div>
+            `
+            : `
+                <p>বর্তমান NID ছবি নেই।</p>
+            `;
+
+        const tradePreview = data.tradelicense
+            ? `
+                <p>
+                    <b>বর্তমান Trade License:</b><br>
+
+                    <a
+                        href="${escapeHTML(data.tradelicense)}"
+                        target="_blank"
+                        rel="noopener">
+                        📄 বর্তমান Trade License দেখুন
+                    </a>
+                </p>
+            `
+            : `
+                <p>বর্তমান Trade License নেই।</p>
+            `;
+
+
+        /* =================================================
+           FULL EDIT FORM
+           ================================================= */
+
+        details.innerHTML = `
+
+            <div class="full-edit-form">
+
+                <h2>
+                    ✏️ সদস্যের সম্পূর্ণ তথ্য সংশোধন
+                </h2>
+
+                <p style="
+                    background:#fff3cd;
+                    padding:10px;
+                    border-radius:6px;
+                    border:1px solid #ffe69c;
+                ">
+                    ⚠️ যে ফাইল নতুন করে নির্বাচন করবেন,
+                    সেটি পুরোনো ফাইলের পরিবর্তে সংরক্ষণ হবে।
+                    নতুন ফাইল না দিলে পুরোনো ফাইল থাকবে।
+                </p>
+
+
+                <form id="fullEditMemberForm">
+
+
+                    <!-- =================================
+                         MEMBER ID
+                         ================================= -->
+
+                    <div class="edit-field">
+
+                        <label>
+                            Member ID
+                        </label>
+
+                        <input
+                            type="text"
+                            value="${escapeHTML(
+                                data.memberid || ""
+                            )}"
+                            disabled
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         NAME
+                         ================================= -->
+
+                    <div class="edit-field">
+
+                        <label>
+                            পূর্ণ নাম *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editName"
+                            value="${escapeHTML(
+                                data.name || ""
+                            )}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         MOBILE
+                         ================================= -->
+
+                    <div class="edit-field">
+
+                        <label>
+                            মোবাইল *
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="editMobile"
+                            value="${escapeHTML(
+                                data.mobile || ""
+                            )}"
+                            maxlength="11"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         WHATSAPP
+                         ================================= -->
+
+                    <div class="edit-field">
+
+                        <label>
+                            WhatsApp
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="editWhatsapp"
+                            value="${escapeHTML(
+                                data.whatsapp || ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         EMAIL
+                         ================================= -->
+
+                    <div class="edit-field">
+
+                        <label>
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="editEmail"
+                            value="${escapeHTML(
+                                data.email || ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         DOB
+                         ================================= -->
+
+                    <div class="edit-field">
+
+                        <label>
+                            জন্ম তারিখ
+                        </label>
+
+                        <input
+                            type="date"
+                            id="editDob"
+                            value="${escapeHTML(
+                                data.dob || ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         SHOP
+                         ================================= -->
+
+                    <div class="edit-field">
+
+                        <label>
+                            দোকানের নাম *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editShop"
+                            value="${escapeHTML(
+                                data.shop || ""
+                            )}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         ADDRESS
+                         ================================= -->
+
+                    <div class="edit-field">
+
+                        <label>
+                            ঠিকানা
+                        </label>
+
+                        <textarea
+                            id="editAddress"
+                            rows="4"
+                        >${escapeHTML(
+                            data.address || ""
+                        )}</textarea>
+
+                    </div>
+
+
+                    <!-- =================================
+                         GOOGLE MAP
+                         ================================= -->
+
+                    <div class="edit-field">
+
+                        <label>
+                            Google Maps Link
+                        </label>
+
+                        <input
+                            type="url"
+                            id="editMap"
+                            value="${escapeHTML(
+                                data.map || ""
+                            )}"
+                            placeholder="https://maps.google.com/..."
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         BUSINESS
+                         ================================= -->
+
+                    <div class="edit-field">
+
+                        <label>
+                            ব্যবসার ধরন
+                        </label>
+
+                        <textarea
+                            id="editBusiness"
+                            rows="4"
+                        >${escapeHTML(
+                            data.business || ""
+                        )}</textarea>
+
+                    </div>
+
+
+                    <!-- =================================
+                         NID
+                         ================================= -->
+
+                    <div class="edit-field">
+
+                        <label>
+                            NID *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editNid"
+                            value="${escapeHTML(
+                                data.nid || ""
+                            )}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         STATUS
+                         ================================= -->
+
+                    <div class="edit-field">
+
+                        <label>
+                            সদস্যের স্ট্যাটাস
+                        </label>
+
+                        <select id="editStatus">
+
+                            <option
+                                value="Pending"
+                                ${
+                                    String(data.status)
+                                    .toLowerCase() === "pending"
+                                    ? "selected"
+                                    : ""
+                                }>
+                                Pending
+                            </option>
+
+                            <option
+                                value="Approved"
+                                ${
+                                    String(data.status)
+                                    .toLowerCase() === "approved"
+                                    ? "selected"
+                                    : ""
+                                }>
+                                Approved
+                            </option>
+
+                            <option
+                                value="Rejected"
+                                ${
+                                    String(data.status)
+                                    .toLowerCase() === "rejected"
+                                    ? "selected"
+                                    : ""
+                                }>
+                                Rejected
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <!-- =================================
+                         MEMBER PHOTO
+                         ================================= -->
+
+                    <div class="edit-upload-box">
+
+                        <h3>
+                            👤 সদস্যের ছবি
+                        </h3>
+
+                        ${photoPreview}
+
+                        <label>
+                            নতুন ছবি নির্বাচন করুন
+                        </label>
+
+                        <input
+                            type="file"
+                            id="editPhoto"
+                            accept="image/*"
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         SHOP PHOTO
+                         ================================= -->
+
+                    <div class="edit-upload-box">
+
+                        <h3>
+                            🏪 দোকানের ছবি
+                        </h3>
+
+                        ${shopPreview}
+
+                        <label>
+                            নতুন দোকানের ছবি নির্বাচন করুন
+                        </label>
+
+                        <input
+                            type="file"
+                            id="editShopImage"
+                            accept="image/*"
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         NID PHOTO
+                         ================================= -->
+
+                    <div class="edit-upload-box">
+
+                        <h3>
+                            🪪 NID-এর ছবি
+                        </h3>
+
+                        ${nidPreview}
+
+                        <label>
+                            নতুন NID ছবি নির্বাচন করুন
+                        </label>
+
+                        <input
+                            type="file"
+                            id="editNidImage"
+                            accept="image/*"
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         TRADE LICENSE
+                         ================================= -->
+
+                    <div class="edit-upload-box">
+
+                        <h3>
+                            📄 Trade License
+                        </h3>
+
+                        ${tradePreview}
+
+                        <label>
+                            নতুন Trade License নির্বাচন করুন
+                        </label>
+
+                        <input
+                            type="file"
+                            id="editTradeLicense"
+                            accept="
+                                image/*,
+                                application/pdf
+                            "
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         BUTTONS
+                         ================================= -->
+
+                    <div
+                        style="
+                            display:flex;
+                            gap:10px;
+                            flex-wrap:wrap;
+                            margin-top:20px;
+                        "
+                    >
+
+                        <button
+                            type="submit"
+                            id="saveFullEditBtn"
+                            style="
+                                padding:12px 20px;
+                                border:none;
+                                border-radius:6px;
+                                cursor:pointer;
+                                font-weight:bold;
+                            "
+                        >
+                            💾 তথ্য আপডেট করুন
+                        </button>
+
+
+                        <button
+                            type="button"
+                            id="cancelFullEditBtn"
+                            style="
+                                padding:12px 20px;
+                                border:none;
+                                border-radius:6px;
+                                cursor:pointer;
+                            "
+                        >
+                            ❌ বাতিল
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+        `;
+
+
+        modal.style.display = "block";
+
+
+        /* =================================================
+           CANCEL
+           ================================================= */
+
+        const cancelButton =
+            document.getElementById(
+                "cancelFullEditBtn"
+            );
+
+        if (cancelButton) {
+
+            cancelButton.addEventListener(
+                "click",
+                () => {
+
+                    closeModal();
+
+                }
+            );
+        }
+
+
+        /* =================================================
+           FORM SUBMIT
+           ================================================= */
+
+        const editForm =
+            document.getElementById(
+                "fullEditMemberForm"
+            );
+
+        if (!editForm) {
+            return;
+        }
+
+
+        editForm.addEventListener(
+            "submit",
+            async event => {
+
+                event.preventDefault();
+
+
+                const saveButton =
+                    document.getElementById(
+                        "saveFullEditBtn"
+                    );
+
+
+                if (saveButton) {
+
+                    saveButton.disabled = true;
+
+                    saveButton.textContent =
+                        "⏳ তথ্য আপডেট হচ্ছে...";
+
+                }
+
+
+                try {
+
+                    /* =====================================
+                       GET VALUES
+                       ===================================== */
+
+                    const name =
+                        document
+                            .getElementById("editName")
+                            ?.value
+                            .trim() || "";
+
+                    const mobile =
+                        document
+                            .getElementById("editMobile")
+                            ?.value
+                            .trim() || "";
+
+                    const whatsapp =
+                        document
+                            .getElementById("editWhatsapp")
+                            ?.value
+                            .trim() || "";
+
+                    const email =
+                        document
+                            .getElementById("editEmail")
+                            ?.value
+                            .trim() || "";
+
+                    const dob =
+                        document
+                            .getElementById("editDob")
+                            ?.value || "";
+
+                    const shop =
+                        document
+                            .getElementById("editShop")
+                            ?.value
+                            .trim() || "";
+
+                    const address =
+                        document
+                            .getElementById("editAddress")
+                            ?.value
+                            .trim() || "";
+
+                    const map =
+                        document
+                            .getElementById("editMap")
+                            ?.value
+                            .trim() || "";
+
+                    const business =
+                        document
+                            .getElementById("editBusiness")
+                            ?.value
+                            .trim() || "";
+
+                    const nid =
+                        document
+                            .getElementById("editNid")
+                            ?.value
+                            .trim() || "";
+
+                    const status =
+                        document
+                            .getElementById("editStatus")
+                            ?.value || "Pending";
+
+
+                    /* =====================================
+                       VALIDATION
+                       ===================================== */
+
+                    if (!name) {
+
+                        showAlert(
+                            "পূর্ণ নাম লিখুন।"
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        !/^[0-9]{11}$/.test(mobile)
+                    ) {
+
+                        showAlert(
+                            "সঠিক ১১ সংখ্যার মোবাইল নম্বর লিখুন।"
+                        );
+
+                        return;
+                    }
+
+
+                    if (!shop) {
+
+                        showAlert(
+                            "দোকানের নাম লিখুন।"
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        !/^(?:[0-9]{10}|[0-9]{13}|[0-9]{17})$/
+                            .test(nid)
+                    ) {
+
+                        showAlert(
+                            "NID অবশ্যই ১০, ১৩ অথবা ১৭ সংখ্যার হতে হবে।"
+                        );
+
+                        return;
+                    }
+
+
+                    /* =====================================
+                       NEW FILES
+                       ===================================== */
+
+                    const newPhoto =
+                        document
+                            .getElementById("editPhoto")
+                            ?.files?.[0] || null;
+
+                    const newShopImage =
+                        document
+                            .getElementById("editShopImage")
+                            ?.files?.[0] || null;
+
+                    const newNidImage =
+                        document
+                            .getElementById("editNidImage")
+                            ?.files?.[0] || null;
+
+                    const newTradeLicense =
+                        document
+                            .getElementById("editTradeLicense")
+                            ?.files?.[0] || null;
+
+
+                    /* =====================================
+                       CONFIRM
+                       ===================================== */
+
+                    if (
+                        !confirm(
+                            "এই সদস্যের সম্পূর্ণ তথ্য আপডেট করতে চান?"
+                        )
+                    ) {
+
+                        return;
+                    }
+
+
+                    /* =====================================
+                       UPLOAD NEW MEMBER PHOTO
+                       ===================================== */
+
+                    let photoURL =
+                        data.photo || "";
+
+                    if (newPhoto) {
+
+                        photoURL =
+                            await uploadFile(
+                                newPhoto,
+                                "member-photo"
+                            );
+                    }
+
+
+                    /* =====================================
+                       UPLOAD NEW SHOP PHOTO
+                       ===================================== */
+
+                    let shopImageURL =
+                        data.shopimage || "";
+
+                    if (newShopImage) {
+
+                        shopImageURL =
+                            await uploadFile(
+                                newShopImage,
+                                "shop-photo"
+                            );
+                    }
+
+
+                    /* =====================================
+                       UPLOAD NEW NID PHOTO
+                       ===================================== */
+
+                    let nidImageURL =
+                        data.nidimage || "";
+
+                    if (newNidImage) {
+
+                        nidImageURL =
+                            await uploadFile(
+                                newNidImage,
+                                "nid-photo"
+                            );
+                    }
+
+
+                    /* =====================================
+                       UPLOAD NEW TRADE LICENSE
+                       ===================================== */
+
+                    let tradeLicenseURL =
+                        data.tradelicense || "";
+
+                    if (newTradeLicense) {
+
+                        tradeLicenseURL =
+                            await uploadFile(
+                                newTradeLicense,
+                                "trade-license"
+                            );
+                    }
+
+
+                    /* =====================================
+                       UPDATE DATABASE
+                       ===================================== */
+
+                    const updateData = {
+
+                        name: name,
+
+                        mobile: mobile,
+
+                        whatsapp: whatsapp,
+
+                        email: email,
+
+                        dob: dob,
+
+                        shop: shop,
+
+                        address: address,
+
+                        map: map,
+
+                        business: business,
+
+                        nid: nid,
+
+                        status: status,
+
+                        photo: photoURL,
+
+                        shopimage: shopImageURL,
+
+                        nidimage: nidImageURL,
+
+                        tradelicense:
+                            tradeLicenseURL
+                    };
+
+
+                    const {
+                        error: updateError
+                    } =
+                        await supabase
+                            .from("members")
+                            .update(updateData)
+                            .eq("id", id);
+
+
+                    if (updateError) {
+                        throw updateError;
+                    }
+
+
+                    /* =====================================
+                       SUCCESS
+                       ===================================== */
+
+                    showAlert(
+                        "✅ সদস্যের সকল তথ্য সফলভাবে আপডেট হয়েছে।"
+                    );
+
+
+                    closeModal();
+
+
+                    await loadMembers();
+
+
+                } catch (updateError) {
+
+                    console.error(
+                        "Full Member Update Error:",
+                        updateError
+                    );
+
+
+                    showAlert(
+                        updateError?.message ||
+                        "❌ সদস্যের তথ্য আপডেট করা যায়নি।"
+                    );
+
+
+                } finally {
+
+                    if (saveButton) {
+
+                        saveButton.disabled = false;
+
+                        saveButton.textContent =
+                            "💾 তথ্য আপডেট করুন";
+
+                    }
+
+                }
+
+            }
         );
 
-        await loadMembers();
 
     } catch (error) {
 
         console.error(
-            "Edit Error:",
+            "Edit Member Error:",
             error
         );
 
+
         showAlert(
             error?.message ||
-            "তথ্য আপডেট করা যায়নি।"
+            "❌ সদস্যের তথ্য লোড করা যায়নি।"
         );
+
     }
+
 }
 
 /* =========================================================
