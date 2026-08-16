@@ -302,6 +302,22 @@ async function registerMember() {
         const tradeLicense =
             document.getElementById("tradeLicense")
                 ?.files?.[0];
+       if (tradeLicense) {
+
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png"
+    ];
+
+    if (!allowedTypes.includes(tradeLicense.type)) {
+
+        showAlert(
+            "⚠️ Trade License-এর জন্য শুধু JPG অথবা PNG ছবি আপলোড করুন।"
+        );
+
+        return;
+    }
+}
 
         const nidImage =
             document.getElementById("nidImage")
