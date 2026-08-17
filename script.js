@@ -960,20 +960,40 @@ async function viewMember(id) {
             }
 
             ${
-                data.tradelicense
-                ? `
-                    <p>
-                        <a
-                            href="${escapeHTML(data.tradelicense)}"
-                            target="_blank"
-                            rel="noopener">
-                            📄 Trade License দেখুন
-                        </a>
-                    </p>
-                `
-                : ""
-            }
+    data.tradelicense
+    ? `
+        <p>
+            <b>📄 Trade License:</b><br>
 
+            <img
+                src="${escapeHTML(data.tradelicense)}"
+                alt="Trade License"
+                style="
+                    width:100%;
+                    max-width:400px;
+                    max-height:500px;
+                    object-fit:contain;
+                    border:1px solid #ccc;
+                    border-radius:8px;
+                    margin-top:10px;
+                    display:block;
+                "
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';"
+            >
+
+            <a
+                href="${escapeHTML(data.tradelicense)}"
+                target="_blank"
+                rel="noopener"
+                style="display:none;"
+            >
+                📄 পুরাতন Trade License দেখুন
+            </a>
+
+        </p>
+    `
+    : ""
+}
         `;
 
         modal.style.display = "block";
