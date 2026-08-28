@@ -422,9 +422,41 @@ if (!agree) {
                 "nid-photo"
             );
 
-        const memberId =
-            "TG-" + Date.now();
+        /* =========================================================
+   AUTO MEMBER ID
+   ========================================================= */
 
+const { data: lastMember, error: lastMemberError } =
+    await supabase
+        .from("members")
+        .select("memberid")
+        .like("memberid", "TG-%")
+        .order("id", {
+            ascending: false
+        })
+        .limit(1)
+        .maybeSingle();
+
+if (lastMemberError) {
+    throw lastMemberError;
+}
+
+let nextNumber = 1;
+
+if (lastMember && lastMember.memberid) {
+
+    const match =
+        String(lastMember.memberid).match(/^TG-(\d+)$/);
+
+    if (match) {
+        nextNumber =
+            parseInt(match[1], 10) + 1;
+    }
+}
+
+const memberId =
+    "TG-" +
+    String(nextNumber).padStart(4, "0");
         const business =
             selectedBusinessTypes.join(", ");
 
