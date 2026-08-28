@@ -422,41 +422,16 @@ if (!agree) {
                 "nid-photo"
             );
 
-        /* =========================================================
-   AUTO MEMBER ID
+/* =========================================================
+   AUTO MEMBER ID - SUPABASE SAFE
    ========================================================= */
 
-const { data: lastMember, error: lastMemberError } =
-    await supabase
-        .from("members")
-        .select("memberid")
-        .like("memberid", "TG-%")
-        .order("id", {
-            ascending: false
-        })
-        .limit(1)
-        .maybeSingle();
+const { data: memberId, error: memberIdError } =
+    await supabase.rpc("get_next_member_id");
 
-if (lastMemberError) {
-    throw lastMemberError;
+if (memberIdError) {
+    throw memberIdError;
 }
-
-let nextNumber = 1;
-
-if (lastMember && lastMember.memberid) {
-
-    const match =
-        String(lastMember.memberid).match(/^TG-(\d+)$/);
-
-    if (match) {
-        nextNumber =
-            parseInt(match[1], 10) + 1;
-    }
-}
-
-const memberId =
-    "TG-" +
-    String(nextNumber).padStart(4, "0");
         const business =
             selectedBusinessTypes.join(", ");
 
