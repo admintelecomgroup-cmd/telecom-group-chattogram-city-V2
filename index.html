@@ -472,7 +472,7 @@
             <input
                 type="file"
                 id="nidImage"
-                accept="image/*">
+                accept="image/*"
                 required>
         </div>
 
@@ -727,7 +727,6 @@
         );
 
     </script>
-
 <!-- =========================================
      TELECOM GROUP - WHATSAPP SUPPORT FOOTER
      ========================================= -->
@@ -742,15 +741,13 @@
         আমাদের WhatsApp Support-এ মেসেজ করুন
     </div>
 
-    <!-- WhatsApp Button -->
     <a
-        href="https://wa.me/8801845847686?text=Assalamu%20Alaikum%2C%20Telecom%20Group%20%E0%A6%B8%E0%A6%AE%E0%A7%8D%E0%A6%AA%E0%A6%B0%E0%A7%8D%E0%A6%95%E0%A7%87%20%E0%A6%86%E0%A6%AE%E0%A6%BF%20%E0%A6%B8%E0%A6%BE%E0%A6%B9%E0%A6%BE%E0%A6%AF%E0%A7%8D%E0%A6%AF%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A5%A4"
+        href="https://wa.me/8801845847686?text=Assalamu%20Alaikum%2C%20Telecom%20Group%20%E0%A6%B8%E0%A6%AE%E0%A7%8D%E0%A6%AA%E0%A6%B0%E0%A7%8D%E0%A6%95%E0%A7%87%20%E0%A6%86%E0%A6%AE%E0%A6%BF%20%E0%A6%B8%E0%A6%BE%E0%A6%B9%E0%A6%BE%E0%A6%AF%E0%A7%8D%E0%A6%AF%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A0964"
         target="_blank"
         rel="noopener noreferrer"
         class="tg-whatsapp-btn"
     >
 
-        <!-- WhatsApp Logo -->
         <span class="tg-wa-icon">
 
             <svg
@@ -782,7 +779,6 @@
 
     </a>
 
-    <!-- Telecom Group -->
     <div class="tg-footer-brand">
         <strong>Telecom Group</strong>
     </div>
@@ -796,16 +792,18 @@
 
 <style>
 
-/* =========================================
-   MAIN FOOTER
-   ========================================= */
+/* ===============================
+   WhatsApp Support Footer
+   =============================== */
 
 .tg-contact-footer {
+
     width: calc(100% - 30px);
     max-width: 650px;
 
-    margin: 28px auto 20px;
-    padding: 22px 16px 17px;
+    margin: 30px auto 20px;
+
+    padding: 24px 16px 18px;
 
     box-sizing: border-box;
 
@@ -828,17 +826,20 @@
         sans-serif;
 
     box-shadow:
-        0 8px 25px rgba(0, 70, 150, 0.20);
+        0 8px 25px rgba(0,70,150,.20);
 
     position: relative;
+
     overflow: hidden;
 }
 
 
-/* Decorative Circles */
+/* Decorative */
 
 .tg-contact-footer::before {
+
     content: "";
+
     position: absolute;
 
     width: 140px;
@@ -846,14 +847,17 @@
 
     border-radius: 50%;
 
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,.06);
 
     top: -70px;
     right: -50px;
 }
 
+
 .tg-contact-footer::after {
+
     content: "";
+
     position: absolute;
 
     width: 100px;
@@ -861,52 +865,53 @@
 
     border-radius: 50%;
 
-    background: rgba(255,255,255,0.05);
+    background: rgba(255,255,255,.05);
 
     bottom: -50px;
     left: -30px;
 }
 
 
-/* =========================================
-   TITLE
-   ========================================= */
+/* Title */
 
 .tg-footer-title {
+
     position: relative;
+
     z-index: 2;
 
-    font-size: 16px;
+    font-size: 17px;
+
     font-weight: 700;
 
     line-height: 1.5;
 
-    margin-bottom: 4px;
+    margin-bottom: 5px;
 }
 
 
-/* =========================================
-   SUBTITLE
-   ========================================= */
+/* Subtitle */
 
 .tg-footer-subtitle {
+
     position: relative;
+
     z-index: 2;
 
-    font-size: 12px;
+    font-size: 13px;
 
-    opacity: 0.90;
+    opacity: .92;
 
     margin-bottom: 16px;
 }
 
 
-/* =========================================
-   WHATSAPP BUTTON
-   ========================================= */
+/* WhatsApp Button */
 
 .tg-whatsapp-btn {
+
     position: relative;
+
     z-index: 3;
 
     display: flex;
@@ -932,40 +937,37 @@
     text-align: left;
 
     box-shadow:
-        0 5px 15px rgba(0,0,0,0.14);
+        0 5px 15px rgba(0,0,0,.14);
 
     transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+        transform .2s ease,
+        box-shadow .2s ease;
 }
 
 
-/* Hover */
-
 .tg-whatsapp-btn:hover {
+
     transform: translateY(-2px);
 
     box-shadow:
-        0 8px 20px rgba(0,0,0,0.20);
+        0 8px 20px rgba(0,0,0,.20);
 }
 
-
-/* Click */
 
 .tg-whatsapp-btn:active {
-    transform: scale(0.98);
+
+    transform: scale(.98);
 }
 
 
-/* =========================================
-   WHATSAPP ICON
-   ========================================= */
+/* WhatsApp Icon */
 
 .tg-wa-icon {
-    width: 44px;
-    height: 44px;
 
-    min-width: 44px;
+    width: 42px;
+    height: 42px;
+
+    min-width: 42px;
 
     border-radius: 50%;
 
@@ -974,66 +976,60 @@
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     box-shadow:
-        0 3px 8px rgba(37,211,102,0.35);
+        0 3px 8px rgba(0,0,0,.15);
 }
 
 
 .tg-wa-icon svg {
-    width: 29px;
-    height: 29px;
+
+    width: 28px;
+    height: 28px;
 
     display: block;
 }
 
 
-/* =========================================
-   WHATSAPP TEXT
-   ========================================= */
+/* Text */
 
 .tg-wa-text {
+
     display: flex;
 
     flex-direction: column;
 
-    justify-content: center;
-
-    line-height: 1.25;
+    flex: 1;
 }
 
 
 .tg-wa-text small {
-    display: block;
 
     font-size: 11px;
 
-    color: #777777;
+    color: #777;
 
-    margin-bottom: 3px;
+    margin-bottom: 2px;
 }
 
 
 .tg-wa-text strong {
-    display: block;
 
-    font-size: 18px;
-
-    font-weight: 700;
+    font-size: 17px;
 
     color: #0757b8;
+
+    letter-spacing: .3px;
 }
 
 
-/* =========================================
-   ARROW
-   ========================================= */
+/* Arrow */
 
 .tg-arrow {
-    margin-left: auto;
 
-    font-size: 31px;
+    font-size: 30px;
 
     line-height: 1;
 
@@ -1043,85 +1039,74 @@
 }
 
 
-/* =========================================
-   TELECOM GROUP BRAND
-   ========================================= */
+/* Brand */
 
 .tg-footer-brand {
+
     position: relative;
+
     z-index: 2;
 
-    margin-top: 15px;
+    margin-top: 18px;
 
-    font-size: 14px;
+    font-size: 15px;
 
-    opacity: 0.98;
+    letter-spacing: .5px;
 }
 
 
-.tg-footer-brand strong {
-    font-size: 14px;
-}
-
-
-/* =========================================
-   COPYRIGHT
-   ========================================= */
+/* Copyright */
 
 .tg-footer-copyright {
+
     position: relative;
+
     z-index: 2;
 
-    margin-top: 7px;
+    margin-top: 5px;
 
     font-size: 10px;
 
-    opacity: 0.70;
+    opacity: .75;
 }
 
 
-/* =========================================
-   MOBILE
-   ========================================= */
+/* Mobile */
 
 @media (max-width: 480px) {
 
     .tg-contact-footer {
 
-        width: calc(100% - 24px);
+        width: calc(100% - 20px);
 
-        margin-top: 24px;
+        margin-top: 25px;
 
-        padding: 20px 13px 15px;
+        padding: 20px 12px 16px;
 
-        border-radius: 18px;
+        border-radius: 17px;
     }
 
     .tg-footer-title {
+
         font-size: 15px;
     }
 
     .tg-footer-subtitle {
-        font-size: 11px;
-    }
 
-    .tg-wa-icon {
-        width: 42px;
-        height: 42px;
-        min-width: 42px;
-    }
-
-    .tg-wa-icon svg {
-        width: 27px;
-        height: 27px;
+        font-size: 12px;
     }
 
     .tg-wa-text strong {
-        font-size: 17px;
+
+        font-size: 16px;
     }
 
-    .tg-arrow {
-        font-size: 28px;
+    .tg-wa-icon {
+
+        width: 40px;
+        height: 40px;
+
+        min-width: 40px;
     }
 
 }
