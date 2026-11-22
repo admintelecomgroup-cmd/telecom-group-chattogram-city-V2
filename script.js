@@ -541,20 +541,20 @@ async function loadMembers() {
 
         console.log("Loading members...");
 
-        const {
-            data: members,
-            error
-        } = await supabase
-            .from("members")
-            .select("*")
-            .order("memberid", { ascending: true });
-            });
+        
+const {
+    data: members,
+    error
+} = await supabase
+    .from("members")
+    .select("*")
+    .order("created_at", { ascending: true })
+    .order("id", { ascending: true });
 
-        if (error) {
-            throw error;
-        }
-
-        console.log(
+if (error) {
+    throw error;
+}
+      console.log(
             "Members received:",
             members
         );
