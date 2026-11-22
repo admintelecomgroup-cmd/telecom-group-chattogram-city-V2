@@ -547,8 +547,7 @@ async function loadMembers() {
         } = await supabase
             .from("members")
             .select("*")
-            .order("id", {
-                ascending: false
+            .order("memberid", { ascending: true });
             });
 
         if (error) {
