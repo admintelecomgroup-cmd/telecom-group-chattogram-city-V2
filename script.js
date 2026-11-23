@@ -2130,7 +2130,7 @@ async function deleteMember(id) {
 
     if (
         !confirm(
-            "আপনি কি এই সদস্যটি Delete করতে চান?"
+            "আপনি কি এই সদস্যটি Delete করতে চান?\n\nডিলেটের পর সকল সদস্যের Member ID নতুন করে সাজানো হবে।"
         )
     ) {
         return;
@@ -2138,18 +2138,19 @@ async function deleteMember(id) {
 
     try {
 
-        const { error } =
-            await supabase
-                .from("members")
-                .delete()
-                .eq("id", id);
+        const { error } = await supabase.rpc(
+            "delete_member_and_resequence",
+            {
+                p_member_id: id
+            }
+        );
 
         if (error) {
             throw error;
         }
 
         showAlert(
-            "✅ Member Deleted"
+            "✅ সদস্য ডিলেট হয়েছে এবং সকল Member ID নতুন করে সাজানো হয়েছে।"
         );
 
         await loadMembers();
@@ -2163,7 +2164,7 @@ async function deleteMember(id) {
 
         showAlert(
             error?.message ||
-            "Member Delete করা যায়নি।"
+            "সদস্য ডিলেট বা সিরিয়াল আপডেট করা যায়নি।"
         );
     }
 }
