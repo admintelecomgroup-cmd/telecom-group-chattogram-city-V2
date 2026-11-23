@@ -2128,11 +2128,9 @@ async function editMember(id) {
 
 async function deleteMember(id) {
 
-    if (
-        !confirm(
-            "আপনি কি এই সদস্যটি Delete করতে চান?\n\nডিলেটের পর সকল সদস্যের Member ID নতুন করে সাজানো হবে।"
-        )
-    ) {
+    if (!confirm(
+        "আপনি কি এই সদস্যটি Delete করতে চান?\n\nএরপর সকল Member ID নতুন করে সাজানো হবে।"
+    )) {
         return;
     }
 
@@ -2145,29 +2143,25 @@ async function deleteMember(id) {
             }
         );
 
-        if (error) {
-            throw error;
-        }
+        if (error) throw error;
 
         showAlert(
-            "✅ সদস্য ডিলেট হয়েছে এবং সকল Member ID নতুন করে সাজানো হয়েছে।"
+            "✅ সদস্য ডিলেট হয়েছে। Member ID পুনরায় সাজানো হয়েছে।"
         );
 
         await loadMembers();
 
     } catch (error) {
 
-        console.error(
-            "Delete Error:",
-            error
-        );
+        console.error("Delete Error:", error);
 
         showAlert(
-            error?.message ||
-            "সদস্য ডিলেট বা সিরিয়াল আপডেট করা যায়নি।"
+            error.message ||
+            "সদস্য ডিলেট করা যায়নি।"
         );
     }
 }
+
 
 /* =========================================================
    LOGOUT
